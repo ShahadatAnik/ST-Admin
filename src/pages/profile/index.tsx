@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Button } from '@engine/ui';
 import useAuth from '@/hooks/useAuth';
 
 import { IUserTableData } from './_config/columns/columns.type';
@@ -27,6 +28,7 @@ const DetailsPage = () => {
 				postData={postData}
 				url={url}
 			/>
+			<Button></Button>
 		</div>
 	);
 };

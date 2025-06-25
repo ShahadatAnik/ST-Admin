@@ -9,6 +9,7 @@ export default defineConfig({
 		alias: {
 			'@': '/src',
 			'@core': '/src/components/core',
+			'@engine/ui': '/src/engine/src/components', // src\engine\src\components\index.ts
 		},
 	},
 	build: {

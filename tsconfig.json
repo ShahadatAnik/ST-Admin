@@ -7,6 +7,7 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"@core/*": ["./src/components/core/*"],
+			"@engine/ui": ["./src/engine/src/components"],
 			"@pages/*": ["./src/pages/*"]
 		}
 	}

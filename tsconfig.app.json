@@ -24,6 +24,7 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"@core/*": ["./src/components/core/*"],
+			"@engine/ui": ["./src/engine/src/components"],
 			"@pages/*": ["./src/pages/*"]
 		},
 		"types": ["node"] // This is needed to resolve the "path" module issue
