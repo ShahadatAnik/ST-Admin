@@ -1,0 +1,33 @@
+export const DepartmentAccess = [
+	'bba',
+	'bsc-cse',
+	'bsc-textile',
+	'bsc-mechanical',
+	'bsc-ip',
+	'bsc-eee',
+	'bsc-civil',
+	'emba',
+	'mba',
+	'mba-one-year',
+	'thm',
+	'ba-english',
+	'bss-economics',
+	'llb',
+	'llm',
+	'ma-english',
+	'mgds-one-year',
+	'mss-economics',
+	'physics',
+	'chemistry',
+	'mathematics',
+];
+
+export const InfoAccess = [
+	'notices',
+	'academic_calendar',
+	'examination_guidelines',
+	'information_about_provisional_certificates',
+	'clubs_and_society',
+	'academic_information_and_policies',
+	'journal',
+];
