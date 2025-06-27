@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { Button } from '@engine/ui';
+import { Button } from '@engine/components';
+import ButtonText from '@engine/components/Button/ButtonText';
 import useAuth from '@/hooks/useAuth';
 
 import { IUserTableData } from './_config/columns/columns.type';
@@ -29,6 +30,7 @@ const DetailsPage = () => {
 				url={url}
 			/>
 			<Button></Button>
+			<ButtonText></ButtonText>
 		</div>
 	);
 };
