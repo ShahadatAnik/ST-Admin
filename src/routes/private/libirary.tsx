@@ -13,14 +13,14 @@ const LibraryRoutes: IRoute[] = [
 				name: 'Product Category',
 				path: '/lib/product-category',
 				element: <ProductCategory />,
-				page_name: 'lib_product_category',
+				page_name: 'lib__product_category',
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 			{
 				name: 'Product',
 				path: '/lib/product',
 				element: <Product />,
-				page_name: 'lib_product',
+				page_name: 'lib__product',
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 			{
