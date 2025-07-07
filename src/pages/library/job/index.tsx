@@ -1,33 +1,29 @@
 import { lazy, useMemo, useState } from 'react';
 import { PageProvider, TableProvider } from '@/context';
 import { Row } from '@tanstack/react-table';
+import { useNavigate } from 'react-router-dom';
 
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
 
-import { vendorColumns } from './_config/columns';
-import { IVendorTableData } from './_config/columns/columns.type';
-import { useVendor } from './_config/query';
+import { jobColumns } from './_config/columns';
+import { IJobTableData } from './_config/columns/columns.type';
+import { useJob } from './_config/query';
 
-const AddOrUpdate = lazy(() => import('./add-or-update'));
 const DeleteModal = lazy(() => import('@core/modal/delete'));
 
 const DetailsPage = () => {
-	const { data, isLoading, url, updateData, deleteData, postData, refetch } = useVendor<IVendorTableData[]>();
+	const navigate = useNavigate();
+	const { data, isLoading, url, deleteData, refetch } = useJob<IJobTableData[]>();
 
-	const pageInfo = useMemo(() => new PageInfo('Library/Vendor', url, 'lib__vendor'), [url]);
-
-	// Add/Update Modal state
-	const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+	const pageInfo = useMemo(() => new PageInfo('Library/Job', url, 'lib__job'), [url]);
 
 	const handleCreate = () => {
-		setIsOpenAddModal(true);
+		navigate('/lib/job/create');
 	};
 
-	const [updatedData, setUpdatedData] = useState<IVendorTableData | null>(null);
-	const handleUpdate = (row: Row<IVendorTableData>) => {
-		setUpdatedData(row.original);
-		setIsOpenAddModal(true);
+	const handleUpdate = (row: Row<IJobTableData>) => {
+		navigate(`/lib/job/${row.original.uuid}/update`);
 	};
 
 	// Delete Modal state
@@ -36,15 +32,19 @@ const DetailsPage = () => {
 		name: string;
 	} | null>(null);
 
-	const handleDelete = (row: Row<IVendorTableData>) => {
+	const handleDelete = (row: Row<IJobTableData>) => {
 		setDeleteItem({
 			id: row?.original?.uuid,
-			name: row?.original?.name,
+			name: row?.original?.uuid,
 		});
 	};
 
+	const handlePayment = (row: Row<IJobTableData>) => {
+		navigate(`/lib/job/${row.original.uuid}/payment`);
+	};
+
 	// Table Columns
-	const columns = vendorColumns();
+	const columns = jobColumns(handlePayment);
 
 	return (
 		<PageProvider pageName={pageInfo.getTab()} pageTitle={pageInfo.getTabName()}>
@@ -64,18 +64,6 @@ const DetailsPage = () => {
 				handleRefetch={refetch}
 			>
 				{renderSuspenseModals([
-					<AddOrUpdate
-						{...{
-							url,
-							open: isOpenAddModal,
-							setOpen: setIsOpenAddModal,
-							updatedData,
-							setUpdatedData,
-							postData,
-							updateData,
-						}}
-					/>,
-
 					<DeleteModal
 						{...{
 							deleteItem,
