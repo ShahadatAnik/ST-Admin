@@ -7,6 +7,7 @@ const Client = lazy(() => import('@/pages/library/client'));
 const Vendor = lazy(() => import('@/pages/library/vendor'));
 const Job = lazy(() => import('@/pages/library/job'));
 const JobEntry = lazy(() => import('@/pages/library/job/entry'));
+const Payment = lazy(() => import('@/pages/library/job/payment/entry'));
 
 const LibraryRoutes: IRoute[] = [
 	{
@@ -30,28 +31,28 @@ const LibraryRoutes: IRoute[] = [
 				name: 'Client',
 				path: '/lib/client',
 				element: <Client />,
-				page_name: 'lib_client',
+				page_name: 'lib__client',
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 			{
 				name: 'Vendor',
 				path: '/lib/vendor',
 				element: <Vendor />,
-				page_name: 'lib_vendor',
+				page_name: 'lib__vendor',
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 			{
 				name: 'Job',
 				path: '/lib/job',
 				element: <Job />,
-				page_name: 'lib_job',
+				page_name: 'lib__job',
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 			{
 				name: 'Job Create',
 				path: '/lib/job/create',
 				element: <JobEntry />,
-				page_name: 'lib_job_create',
+				page_name: 'lib__job_create',
 				actions: ['create', 'read', 'update', 'delete'],
 				hidden: true,
 			},
@@ -59,7 +60,15 @@ const LibraryRoutes: IRoute[] = [
 				name: 'Job Update',
 				path: '/lib/job/:uuid/update',
 				element: <JobEntry />,
-				page_name: 'lib_job_update',
+				page_name: 'lib__job_update',
+				actions: ['create', 'read', 'update', 'delete'],
+				hidden: true,
+			},
+			{
+				name: 'Job Payment',
+				path: '/lib/job/:uuid/payment',
+				element: <Payment />,
+				page_name: 'lib__job_payment',
 				actions: ['create', 'read', 'update', 'delete'],
 				hidden: true,
 			},

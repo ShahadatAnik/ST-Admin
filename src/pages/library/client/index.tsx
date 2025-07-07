@@ -15,7 +15,7 @@ const DeleteModal = lazy(() => import('@core/modal/delete'));
 const DetailsPage = () => {
 	const { data, isLoading, url, updateData, deleteData, postData, refetch } = useClient<IClientTableData[]>();
 
-	const pageInfo = useMemo(() => new PageInfo('Library/Client', url, 'lib_client'), [url]);
+	const pageInfo = useMemo(() => new PageInfo('Library/Client', url, 'lib__client'), [url]);
 
 	// Add/Update Modal state
 	const [isOpenAddModal, setIsOpenAddModal] = useState(false);

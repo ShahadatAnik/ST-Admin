@@ -1,8 +1,9 @@
+import { method } from 'lodash';
 import { z } from 'zod';
 
 import { BOOLEAN_DEFAULT_VALUE, NUMBER_REQUIRED, STRING_OPTIONAL, STRING_REQUIRED } from '@/utils/validators';
 
-//* Client Schema
+//* Job Schema
 export const JOB_SCHEMA = z.object({
 	client_uuid: STRING_REQUIRED,
 	work_order: STRING_REQUIRED,
@@ -30,3 +31,24 @@ export const JOB_NULL: Partial<IJob> = {
 };
 
 export type IJob = z.infer<typeof JOB_SCHEMA>;
+
+//* Job Payment Schema
+export const JOB_PAYMENT_SCHEMA = z.object({
+	uuid: STRING_OPTIONAL,
+	job_uuid: STRING_OPTIONAL,
+	payment: z.array(
+		z.object({
+			uuid: STRING_OPTIONAL,
+			job_uuid: STRING_OPTIONAL,
+			paid_at: STRING_OPTIONAL,
+			method: STRING_REQUIRED.default('cash'),
+			amount: NUMBER_REQUIRED.min(1, 'Amount must be greater than 0'),
+		})
+	),
+});
+
+export const JOB_PAYMENT_NULL: Partial<IJobPayment> = {
+	payment: [],
+};
+
+export type IJobPayment = z.infer<typeof JOB_PAYMENT_SCHEMA>;

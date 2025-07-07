@@ -32,3 +32,10 @@ export const useJobEntryByUUID = <T>(uuid: string) =>
 		url: `/lib/job-entry/${uuid}`,
 		enabled: !!uuid,
 	});
+
+export const useJobPayment = <T>(uuid: string) =>
+	useTQuery<T>({
+		queryKey: jobQK.jobPayment(uuid),
+		url: `/lib/job-payment/${uuid}`,
+		enabled: !!uuid,
+	});

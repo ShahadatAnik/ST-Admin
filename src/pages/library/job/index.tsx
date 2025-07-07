@@ -16,7 +16,7 @@ const DetailsPage = () => {
 	const navigate = useNavigate();
 	const { data, isLoading, url, deleteData, refetch } = useJob<IJobTableData[]>();
 
-	const pageInfo = useMemo(() => new PageInfo('Library/Job', url, 'lib_job'), [url]);
+	const pageInfo = useMemo(() => new PageInfo('Library/Job', url, 'lib__job'), [url]);
 
 	const handleCreate = () => {
 		navigate('/lib/job/create');
@@ -39,8 +39,12 @@ const DetailsPage = () => {
 		});
 	};
 
+	const handlePayment = (row: Row<IJobTableData>) => {
+		navigate(`/lib/job/${row.original.uuid}/payment`);
+	};
+
 	// Table Columns
-	const columns = jobColumns();
+	const columns = jobColumns(handlePayment);
 
 	return (
 		<PageProvider pageName={pageInfo.getTab()} pageTitle={pageInfo.getTabName()}>

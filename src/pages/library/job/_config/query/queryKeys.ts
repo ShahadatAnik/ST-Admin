@@ -10,4 +10,5 @@ export const jobQK = {
 	//* job entry
 	jobEntry: () => [...jobQK.all(), 'job-entries'],
 	jobEntryByUUID: (uuid: string) => [...jobQK.jobEntry(), uuid],
+	jobPayment: (uuid: string) => [...jobQK.all(), uuid, 'job-payment'],
 };
