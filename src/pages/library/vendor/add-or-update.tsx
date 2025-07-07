@@ -9,11 +9,11 @@ import { AddModal } from '@core/modal';
 import nanoid from '@/lib/nanoid';
 import { getDateTime } from '@/utils';
 
-import { useClientByUUID } from './_config/query';
-import { CLIENT_NULL, CLIENT_SCHEMA, IClient } from './_config/schema';
-import { IClientAddOrUpdateProps } from './_config/types';
+import { useVendorByUUID } from './_config/query';
+import { IVendor, VENDOR_NULL, VENDOR_SCHEMA } from './_config/schema';
+import { IVendorAddOrUpdateProps } from './_config/types';
 
-const AddOrUpdate: React.FC<IClientAddOrUpdateProps> = ({
+const AddOrUpdate: React.FC<IVendorAddOrUpdateProps> = ({
 	url,
 	open,
 	setOpen,
@@ -25,13 +25,13 @@ const AddOrUpdate: React.FC<IClientAddOrUpdateProps> = ({
 	const isUpdate = !!updatedData;
 
 	const { user } = useAuth();
-	const { data } = useClientByUUID(updatedData?.uuid as string);
+	const { data } = useVendorByUUID(updatedData?.uuid as string);
 
-	const form = useRHF(CLIENT_SCHEMA, CLIENT_NULL);
+	const form = useRHF(VENDOR_SCHEMA, VENDOR_NULL);
 
 	const onClose = () => {
 		setUpdatedData?.(null);
-		form.reset(CLIENT_NULL);
+		form.reset(VENDOR_NULL);
 		setOpen((prev) => !prev);
 	};
 
@@ -44,7 +44,7 @@ const AddOrUpdate: React.FC<IClientAddOrUpdateProps> = ({
 	}, [data, isUpdate]);
 
 	// Submit handler
-	async function onSubmit(values: IClient) {
+	async function onSubmit(values: IVendor) {
 		if (isUpdate) {
 			// UPDATE ITEM
 			updateData.mutateAsync({
@@ -75,26 +75,31 @@ const AddOrUpdate: React.FC<IClientAddOrUpdateProps> = ({
 			isSmall
 			open={open}
 			setOpen={onClose}
-			title={isUpdate ? 'Update Client' : 'Add Client'}
+			title={isUpdate ? 'Update Vendor' : 'Add Vendor'}
 			form={form}
 			onSubmit={onSubmit}
 		>
 			<div className='grid grid-cols-2 gap-4'>
 				<FormField control={form.control} name='name' render={(props) => <CoreForm.Input {...props} />} />
+				<FormField control={form.control} name='phone' render={(props) => <CoreForm.Phone {...props} />} />
+				<FormField control={form.control} name='address' render={(props) => <CoreForm.Input {...props} />} />
 				<FormField
 					control={form.control}
-					name='contact_name'
+					name='starting_date'
+					render={(props) => <CoreForm.DatePicker {...props} />}
+				/>
+				<FormField
+					control={form.control}
+					name='ending_date'
+					render={(props) => <CoreForm.DatePicker {...props} />}
+				/>
+				<FormField
+					control={form.control}
+					name='product_type'
 					render={(props) => <CoreForm.Input {...props} />}
 				/>
-				<FormField
-					control={form.control}
-					name='contact_number'
-					render={(props) => <CoreForm.Phone {...props} />}
-				/>
-				<FormField control={form.control} name='email' render={(props) => <CoreForm.Input {...props} />} />
-				<FormField control={form.control} name='address' render={(props) => <CoreForm.Input {...props} />} />
 			</div>
-
+			<FormField control={form.control} name='purpose' render={(props) => <CoreForm.Textarea {...props} />} />
 			<FormField control={form.control} name='remarks' render={(props) => <CoreForm.Textarea {...props} />} />
 		</AddModal>
 	);
