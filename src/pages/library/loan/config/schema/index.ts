@@ -7,7 +7,7 @@ import { NUMBER_DOUBLE_REQUIRED, STRING_NULLABLE, STRING_OPTIONAL, STRING_REQUIR
 export const LOAN_SCHEMA = z.object({
 	lender_name: STRING_REQUIRED,
 	type: z.enum(['friend', 'business', 'family']),
-	amount: NUMBER_DOUBLE_REQUIRED,
+	amount: NUMBER_DOUBLE_REQUIRED.gt(0),
 	taken_at: STRING_REQUIRED,
 	remarks: STRING_NULLABLE,
 });

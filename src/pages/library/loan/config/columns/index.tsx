@@ -1,17 +1,24 @@
 import { ColumnDef, Row } from '@tanstack/react-table';
 
-import Transfer from '@/components/buttons/transfer';
+import Add from '@/components/buttons/add';
+import { CustomLink } from '@/components/others/link';
 import DateTime from '@/components/ui/date-time';
 
-import { ILoanTableData } from './columns.type';
+import { ILoanTableData, LoanPaidTableData } from './columns.type';
 
-// Department Columns
+//* Loan  Columns
 export const loanColumns = (handlePaid: (row: Row<ILoanTableData>) => void): ColumnDef<ILoanTableData>[] => [
 	{
 		accessorKey: 'lender_name',
 		header: 'Lender Name',
 		enableColumnFilter: false,
-		cell: (info) => info.getValue(),
+		cell: (info) => {
+			const uuid = info.row.original.uuid;
+			return (
+				<CustomLink url={`/lib/loan/${uuid}/details`} label={info.getValue() as string} openInNewTab={true} />
+			);
+		},
+		size: 210,
 	},
 	{
 		accessorKey: 'type',
@@ -29,9 +36,16 @@ export const loanColumns = (handlePaid: (row: Row<ILoanTableData>) => void): Col
 	},
 	{
 		accessorKey: 'total_paid_amount',
-		header: 'Paid Amount',
+		header: 'Paid | Add Payment',
 		enableColumnFilter: false,
-		cell: (info) => info.getValue(),
+		cell: (info) => {
+			return (
+				<div className='flex gap-2'>
+					{info?.getValue() as string | number}
+					<Add onClick={() => handlePaid?.(info.row)} />
+				</div>
+			);
+		},
 		size: 40,
 	},
 	{
@@ -48,10 +62,29 @@ export const loanColumns = (handlePaid: (row: Row<ILoanTableData>) => void): Col
 		enableColumnFilter: false,
 		cell: (info) => <DateTime date={info.getValue() as Date} isTime={false} />,
 	},
+];
+
+//* Load Paid Columns
+
+export const loanPaidColumns = (): ColumnDef<LoanPaidTableData>[] => [
 	{
-		id: 'action_trx',
-		header: 'Paid',
-		cell: (info) => <Transfer onClick={() => handlePaid?.(info.row)} />,
-		size: 20,
+		accessorKey: 'index',
+		header: 'Index',
+		enableColumnFilter: false,
+		cell: (info) => info.getValue(),
+	},
+	{
+		accessorKey: 'type',
+		header: 'Type',
+		enableColumnFilter: false,
+		cell: (info) => info.getValue(),
+		size: 40,
+	},
+	{
+		accessorKey: 'amount',
+		header: 'Amount',
+		enableColumnFilter: false,
+		cell: (info) => info.getValue(),
+		size: 40,
 	},
 ];

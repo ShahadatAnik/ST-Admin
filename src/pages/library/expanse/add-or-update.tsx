@@ -7,16 +7,16 @@ import { FormField } from '@/components/ui/form';
 import CoreForm from '@core/form';
 import { AddModal } from '@core/modal';
 
-import { useOtherProductCategory } from '@/lib/common-queries/other';
+import { useOtherJob } from '@/lib/common-queries/other';
 import nanoid from '@/lib/nanoid';
 import { getDateTime } from '@/utils';
 
-import { IProductTableData } from './config/columns/columns.type';
-import { useLibProductByUUID, useLibProducts } from './config/query';
-import { IProduct, PRODUCT_NULL, PRODUCT_SCHEMA } from './config/schema';
-import { IProductAddOrUpdateProps } from './config/types';
+import { IExpanseTableData } from './config/columns/columns.type';
+import { useLibExpanse, useLibExpanseByUUID } from './config/query';
+import { EXPANSE_NULL, EXPANSE_SCHEMA, IExpanse } from './config/schema';
+import { IExpanseAddOrUpdateProps } from './config/types';
 
-const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
+const AddOrUpdate: React.FC<IExpanseAddOrUpdateProps> = ({
 	url,
 	open,
 	setOpen,
@@ -28,15 +28,15 @@ const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
 	const isUpdate = !!updatedData;
 
 	const { user } = useAuth();
-	const { invalidateQuery: invalidateDesignations } = useLibProducts();
-	const { data } = useLibProductByUUID<IProductTableData>(updatedData?.uuid as string);
-	const { data: productCategoryOptions } = useOtherProductCategory<IFormSelectOption[]>();
+	const { invalidateQuery: invalidateDesignations } = useLibExpanse();
+	const { data } = useLibExpanseByUUID<IExpanseTableData>(updatedData?.uuid as string);
+	const { data: jobOptions } = useOtherJob<IFormSelectOption[]>();
 
-	const form = useRHF(PRODUCT_SCHEMA, PRODUCT_NULL);
+	const form = useRHF(EXPANSE_SCHEMA, EXPANSE_NULL);
 
 	const onClose = () => {
 		setUpdatedData?.(null);
-		form.reset(PRODUCT_NULL);
+		form.reset(EXPANSE_NULL);
 		invalidateDesignations();
 		setOpen((prev) => !prev);
 	};
@@ -50,7 +50,7 @@ const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
 	}, [data, isUpdate]);
 
 	// Submit handler
-	async function onSubmit(values: IProduct) {
+	async function onSubmit(values: IExpanse) {
 		if (isUpdate) {
 			// UPDATE ITEM
 			updateData.mutateAsync({
@@ -80,23 +80,29 @@ const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
 		<AddModal
 			open={open}
 			setOpen={onClose}
-			title={isUpdate ? 'Update Product' : 'Add Product'}
+			title={isUpdate ? 'Update Expanse' : 'Add Expanse'}
 			form={form}
 			onSubmit={onSubmit}
 		>
-			<FormField control={form.control} name='name' render={(props) => <CoreForm.Input {...props} />} />
 			<FormField
 				control={form.control}
-				name='product_category_uuid'
+				name='job_uuid'
 				render={(props) => (
-					<CoreForm.ReactSelect
-						label='Product Category'
-						placeholder='Select Product Category'
-						options={productCategoryOptions!}
-						{...props}
-					/>
+					<CoreForm.ReactSelect label='Job' placeholder='Select Job' options={jobOptions!} {...props} />
 				)}
 			/>
+			<FormField
+				control={form.control}
+				name='expense_at'
+				render={(props) => <CoreForm.DatePicker {...props} />}
+			/>
+			<FormField control={form.control} name='type' render={(props) => <CoreForm.Input {...props} />} />
+			<FormField
+				control={form.control}
+				name='amount'
+				render={(props) => <CoreForm.Input type='number' {...props} />}
+			/>
+			<FormField control={form.control} name='reason' render={(props) => <CoreForm.Textarea {...props} />} />
 			<FormField control={form.control} name='remarks' render={(props) => <CoreForm.Textarea {...props} />} />
 		</AddModal>
 	);
