@@ -34,12 +34,11 @@ export type IJob = z.infer<typeof JOB_SCHEMA>;
 
 //* Job Payment Schema
 export const JOB_PAYMENT_SCHEMA = z.object({
-	uuid: STRING_OPTIONAL,
-	job_uuid: STRING_OPTIONAL,
 	payment: z.array(
 		z.object({
 			uuid: STRING_OPTIONAL,
 			job_uuid: STRING_OPTIONAL,
+			index: NUMBER_REQUIRED.min(1, 'Index must be greater than 0'),
 			paid_at: STRING_OPTIONAL,
 			method: STRING_REQUIRED.default('cash'),
 			amount: NUMBER_REQUIRED.min(1, 'Amount must be greater than 0'),
