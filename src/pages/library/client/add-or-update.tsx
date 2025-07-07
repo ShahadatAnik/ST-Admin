@@ -1,34 +1,37 @@
 import { useEffect } from 'react';
+import useAuth from '@/hooks/useAuth';
 import useRHF from '@/hooks/useRHF';
 
 import { FormField } from '@/components/ui/form';
 import CoreForm from '@core/form';
 import { AddModal } from '@core/modal';
 
+import nanoid from '@/lib/nanoid';
 import { getDateTime } from '@/utils';
-import Formdata from '@/utils/formdata';
 
-import { useHrUsersByUUID } from './_config/query';
-import { IUser, USER_NULL, USER_SCHEMA } from './_config/schema';
-import { IUserAddOrUpdateProps } from './_config/types';
+import { useClientByUUID } from './_config/query';
+import { CLIENT_NULL, CLIENT_SCHEMA, IClient } from './_config/schema';
+import { IClientAddOrUpdateProps } from './_config/types';
 
-const AddOrUpdate: React.FC<IUserAddOrUpdateProps> = ({
+const AddOrUpdate: React.FC<IClientAddOrUpdateProps> = ({
 	url,
 	open,
 	setOpen,
 	updatedData,
 	setUpdatedData,
-	imageUpdateData,
+	postData,
+	updateData,
 }) => {
 	const isUpdate = !!updatedData;
 
-	const { data } = useHrUsersByUUID(updatedData?.uuid as string);
+	const { user } = useAuth();
+	const { data } = useClientByUUID(updatedData?.uuid as string);
 
-	const form = useRHF(USER_SCHEMA(isUpdate) as any, USER_NULL);
+	const form = useRHF(CLIENT_SCHEMA, CLIENT_NULL);
 
 	const onClose = () => {
 		setUpdatedData?.(null);
-		form.reset(USER_NULL);
+		form.reset(CLIENT_NULL);
 		setOpen((prev) => !prev);
 	};
 
@@ -41,16 +44,26 @@ const AddOrUpdate: React.FC<IUserAddOrUpdateProps> = ({
 	}, [data, isUpdate]);
 
 	// Submit handler
-	async function onSubmit(values: IUser) {
-		const formData = Formdata<IUser>(values);
-		formData.append('updated_at', getDateTime());
+	async function onSubmit(values: IClient) {
 		if (isUpdate) {
 			// UPDATE ITEM
-			await imageUpdateData.mutateAsync({
-				url: `${url}`,
+			updateData.mutateAsync({
+				url: `${url}/${updatedData?.uuid}`,
 				updatedData: {
 					...values,
 					updated_at: getDateTime(),
+				},
+				onClose,
+			});
+		} else {
+			// ADD NEW ITEM
+			postData.mutateAsync({
+				url,
+				newData: {
+					...values,
+					created_at: getDateTime(),
+					created_by: user?.uuid,
+					uuid: nanoid(),
 				},
 				onClose,
 			});
@@ -62,13 +75,24 @@ const AddOrUpdate: React.FC<IUserAddOrUpdateProps> = ({
 			isSmall
 			open={open}
 			setOpen={onClose}
-			title={isUpdate ? 'Update User' : 'Add User'}
+			title={isUpdate ? 'Update Client' : 'Add Client'}
 			form={form}
 			onSubmit={onSubmit}
 		>
 			<div className='grid grid-cols-2 gap-4'>
 				<FormField control={form.control} name='name' render={(props) => <CoreForm.Input {...props} />} />
-				<FormField control={form.control} name='phone' render={(props) => <CoreForm.Phone {...props} />} />
+				<FormField
+					control={form.control}
+					name='contact_name'
+					render={(props) => <CoreForm.Input {...props} />}
+				/>
+				<FormField
+					control={form.control}
+					name='contact_number'
+					render={(props) => <CoreForm.Phone {...props} />}
+				/>
+				<FormField control={form.control} name='email' render={(props) => <CoreForm.Input {...props} />} />
+				<FormField control={form.control} name='address' render={(props) => <CoreForm.Input {...props} />} />
 			</div>
 
 			<FormField control={form.control} name='remarks' render={(props) => <CoreForm.Textarea {...props} />} />
