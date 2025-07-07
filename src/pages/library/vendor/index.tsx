@@ -5,17 +5,17 @@ import { Row } from '@tanstack/react-table';
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
 
-import { clientColumns } from './_config/columns';
-import { IClientTableData } from './_config/columns/columns.type';
-import { useClient } from './_config/query';
+import { vendorColumns } from './_config/columns';
+import { IVendorTableData } from './_config/columns/columns.type';
+import { useVendor } from './_config/query';
 
 const AddOrUpdate = lazy(() => import('./add-or-update'));
 const DeleteModal = lazy(() => import('@core/modal/delete'));
 
 const DetailsPage = () => {
-	const { data, isLoading, url, updateData, deleteData, postData, refetch } = useClient<IClientTableData[]>();
+	const { data, isLoading, url, updateData, deleteData, postData, refetch } = useVendor<IVendorTableData[]>();
 
-	const pageInfo = useMemo(() => new PageInfo('Library/Client', url, 'lib_client'), [url]);
+	const pageInfo = useMemo(() => new PageInfo('Library/Vendor', url, 'lib_vendor'), [url]);
 
 	// Add/Update Modal state
 	const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -24,8 +24,8 @@ const DetailsPage = () => {
 		setIsOpenAddModal(true);
 	};
 
-	const [updatedData, setUpdatedData] = useState<IClientTableData | null>(null);
-	const handleUpdate = (row: Row<IClientTableData>) => {
+	const [updatedData, setUpdatedData] = useState<IVendorTableData | null>(null);
+	const handleUpdate = (row: Row<IVendorTableData>) => {
 		setUpdatedData(row.original);
 		setIsOpenAddModal(true);
 	};
@@ -36,7 +36,7 @@ const DetailsPage = () => {
 		name: string;
 	} | null>(null);
 
-	const handleDelete = (row: Row<IClientTableData>) => {
+	const handleDelete = (row: Row<IVendorTableData>) => {
 		setDeleteItem({
 			id: row?.original?.uuid,
 			name: row?.original?.name,
@@ -44,7 +44,7 @@ const DetailsPage = () => {
 	};
 
 	// Table Columns
-	const columns = clientColumns();
+	const columns = vendorColumns();
 
 	return (
 		<PageProvider pageName={pageInfo.getTab()} pageTitle={pageInfo.getTabName()}>
