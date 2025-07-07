@@ -2,21 +2,21 @@ import { useEffect } from 'react';
 import useAuth from '@/hooks/useAuth';
 import useRHF from '@/hooks/useRHF';
 
-import { IFormSelectOption } from '@/components/core/form/types';
 import { FormField } from '@/components/ui/form';
 import CoreForm from '@core/form';
 import { AddModal } from '@core/modal';
 
-import { useOtherProductCategory } from '@/lib/common-queries/other';
+import { useOtherDepartment } from '@/lib/common-queries/other';
 import nanoid from '@/lib/nanoid';
 import { getDateTime } from '@/utils';
 
-import { IProductTableData } from './config/columns/columns.type';
-import { useLibProductByUUID, useLibProducts } from './config/query';
-import { IProduct, PRODUCT_NULL, PRODUCT_SCHEMA } from './config/schema';
-import { IProductAddOrUpdateProps } from './config/types';
+import { ILoanTableData } from './config/columns/columns.type';
+import { useLibLoanByUUID, useLibLoans } from './config/query';
+import { ILoan, LOAN_NULL, LOAN_SCHEMA } from './config/schema';
+import { ILoanAddOrUpdateProps } from './config/types';
+import { types } from './utils';
 
-const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
+const AddOrUpdate: React.FC<ILoanAddOrUpdateProps> = ({
 	url,
 	open,
 	setOpen,
@@ -28,16 +28,17 @@ const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
 	const isUpdate = !!updatedData;
 
 	const { user } = useAuth();
-	const { invalidateQuery: invalidateDesignations } = useLibProducts();
-	const { data } = useLibProductByUUID<IProductTableData>(updatedData?.uuid as string);
-	const { data: productCategoryOptions } = useOtherProductCategory<IFormSelectOption[]>();
+	const { invalidateQuery: invalidateDesignations } = useLibLoans();
+	const { data } = useLibLoanByUUID<ILoanTableData>(updatedData?.uuid as string);
+	const { invalidateQuery: invalidateUserQuery } = useOtherDepartment();
 
-	const form = useRHF(PRODUCT_SCHEMA, PRODUCT_NULL);
+	const form = useRHF(LOAN_SCHEMA, LOAN_NULL);
 
 	const onClose = () => {
 		setUpdatedData?.(null);
-		form.reset(PRODUCT_NULL);
+		form.reset(LOAN_NULL);
 		invalidateDesignations();
+		invalidateUserQuery();
 		setOpen((prev) => !prev);
 	};
 
@@ -50,7 +51,7 @@ const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
 	}, [data, isUpdate]);
 
 	// Submit handler
-	async function onSubmit(values: IProduct) {
+	async function onSubmit(values: ILoan) {
 		if (isUpdate) {
 			// UPDATE ITEM
 			updateData.mutateAsync({
@@ -80,23 +81,22 @@ const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
 		<AddModal
 			open={open}
 			setOpen={onClose}
-			title={isUpdate ? 'Update Product' : 'Add Product'}
+			title={isUpdate ? 'Update Loan' : 'Add Loan'}
 			form={form}
 			onSubmit={onSubmit}
 		>
-			<FormField control={form.control} name='name' render={(props) => <CoreForm.Input {...props} />} />
+			<FormField control={form.control} name='lender_name' render={(props) => <CoreForm.Input {...props} />} />
 			<FormField
 				control={form.control}
-				name='product_category_uuid'
-				render={(props) => (
-					<CoreForm.ReactSelect
-						label='Product Category'
-						placeholder='Select Product Category'
-						options={productCategoryOptions!}
-						{...props}
-					/>
-				)}
+				name='type'
+				render={(props) => <CoreForm.ReactSelect options={types} placeholder='Select Types' {...props} />}
 			/>
+			<FormField
+				control={form.control}
+				name='amount'
+				render={(props) => <CoreForm.Input type='number' {...props} />}
+			/>
+			<FormField control={form.control} name='taken_at' render={(props) => <CoreForm.DatePicker {...props} />} />
 			<FormField control={form.control} name='remarks' render={(props) => <CoreForm.Textarea {...props} />} />
 		</AddModal>
 	);
