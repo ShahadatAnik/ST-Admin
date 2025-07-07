@@ -60,6 +60,8 @@ const otherQK = {
 	bank: () => [...otherQK.all(), 'bank'],
 	//*bill
 	bill: (query: string) => [...otherQK.all(), 'bill', ...(query ? [query] : [])],
+	//*product-category
+	productCategory: () => [...otherQK.all(), 'product-category'],
 };
 
 export default otherQK;

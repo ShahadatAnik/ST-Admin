@@ -162,3 +162,10 @@ export const useOtherBill = <T>(query?: string) =>
 		queryKey: otherQK.bill(query ? query : ''),
 		url: query ? `/other/procure/bill/value/label?${query}` : `/other/procure/bill/value/label`,
 	});
+
+//* GET OTHER PRODUCT CATEGORY
+export const useOtherProductCategory = <T>() =>
+	useTQuery<T>({
+		queryKey: otherQK.productCategory(),
+		url: `/other/lib/product-category/value/label`,
+	});

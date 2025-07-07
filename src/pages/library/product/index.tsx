@@ -5,18 +5,17 @@ import { Row } from '@tanstack/react-table';
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
 
-import { departmentColumns } from '../_config/columns';
-import { IDepartmentTableData } from '../_config/columns/columns.type';
-import { useHrDepartments } from '../_config/query';
+import { productColumns } from './config/columns';
+import { IProductTableData } from './config/columns/columns.type';
+import { useLibProducts } from './config/query';
 
 const AddOrUpdate = lazy(() => import('./add-or-update'));
 const DeleteModal = lazy(() => import('@core/modal/delete'));
 
-const Department = () => {
-	const { data, isLoading, url, deleteData, postData, updateData, refetch } =
-		useHrDepartments<IDepartmentTableData[]>();
+const Product = () => {
+	const { data, isLoading, url, deleteData, postData, updateData, refetch } = useLibProducts<IProductTableData[]>();
 
-	const pageInfo = useMemo(() => new PageInfo('HR/Department', url, 'admin__user_department'), [url]);
+	const pageInfo = useMemo(() => new PageInfo('Library/Product', url, 'lib__product'), [url]);
 
 	// Add/Update Modal state
 	const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -25,9 +24,9 @@ const Department = () => {
 		setIsOpenAddModal(true);
 	};
 
-	const [updatedData, setUpdatedData] = useState<IDepartmentTableData | null>(null);
+	const [updatedData, setUpdatedData] = useState<IProductTableData | null>(null);
 
-	const handleUpdate = (row: Row<IDepartmentTableData>) => {
+	const handleUpdate = (row: Row<IProductTableData>) => {
 		setUpdatedData(row.original);
 		setIsOpenAddModal(true);
 	};
@@ -38,7 +37,7 @@ const Department = () => {
 		name: string;
 	} | null>(null);
 
-	const handleDelete = (row: Row<IDepartmentTableData>) => {
+	const handleDelete = (row: Row<IProductTableData>) => {
 		setDeleteItem({
 			id: row?.original?.uuid,
 			name: row?.original?.name,
@@ -46,7 +45,7 @@ const Department = () => {
 	};
 
 	// Table Columns
-	const columns = departmentColumns();
+	const columns = productColumns();
 
 	return (
 		<PageProvider pageName={pageInfo.getTab()} pageTitle={pageInfo.getTabName()}>
@@ -87,4 +86,4 @@ const Department = () => {
 	);
 };
 
-export default Department;
+export default Product;

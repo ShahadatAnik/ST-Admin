@@ -10,12 +10,12 @@ import { useOtherDepartment } from '@/lib/common-queries/other';
 import nanoid from '@/lib/nanoid';
 import { getDateTime } from '@/utils';
 
-import { IDepartmentTableData } from '../_config/columns/columns.type';
-import { useHrDepartmentsByUUID, useHrDesignations, useHrUsers } from '../_config/query';
-import { DEPARTMENT_NULL, DEPARTMENT_SCHEMA, IDepartment } from '../_config/schema';
-import { IDepartmentAddOrUpdateProps } from '../_config/types';
+import { IProductCategoryTableData } from './config/columns/columns.type';
+import { useLibProductCategoryByUUID, useLibProductsCategory } from './config/query';
+import { IProductCategory, PRODUCT_CATEGORY_NULL, PRODUCT_CATEGORY_SCHEMA } from './config/schema';
+import { IProductCategoryAddOrUpdateProps } from './config/types';
 
-const AddOrUpdate: React.FC<IDepartmentAddOrUpdateProps> = ({
+const AddOrUpdate: React.FC<IProductCategoryAddOrUpdateProps> = ({
 	url,
 	open,
 	setOpen,
@@ -27,17 +27,15 @@ const AddOrUpdate: React.FC<IDepartmentAddOrUpdateProps> = ({
 	const isUpdate = !!updatedData;
 
 	const { user } = useAuth();
-	const { invalidateQuery: invalidateUsers } = useHrUsers();
-	const { invalidateQuery: invalidateDesignations } = useHrDesignations();
-	const { data } = useHrDepartmentsByUUID<IDepartmentTableData>(updatedData?.uuid as string);
+	const { invalidateQuery: invalidateDesignations } = useLibProductsCategory();
+	const { data } = useLibProductCategoryByUUID<IProductCategoryTableData>(updatedData?.uuid as string);
 	const { invalidateQuery: invalidateUserQuery } = useOtherDepartment();
 
-	const form = useRHF(DEPARTMENT_SCHEMA, DEPARTMENT_NULL);
+	const form = useRHF(PRODUCT_CATEGORY_SCHEMA, PRODUCT_CATEGORY_NULL);
 
 	const onClose = () => {
 		setUpdatedData?.(null);
-		form.reset(DEPARTMENT_NULL);
-		invalidateUsers();
+		form.reset(PRODUCT_CATEGORY_NULL);
 		invalidateDesignations();
 		invalidateUserQuery();
 		setOpen((prev) => !prev);
@@ -52,7 +50,7 @@ const AddOrUpdate: React.FC<IDepartmentAddOrUpdateProps> = ({
 	}, [data, isUpdate]);
 
 	// Submit handler
-	async function onSubmit(values: IDepartment) {
+	async function onSubmit(values: IProductCategory) {
 		if (isUpdate) {
 			// UPDATE ITEM
 			updateData.mutateAsync({
@@ -82,11 +80,12 @@ const AddOrUpdate: React.FC<IDepartmentAddOrUpdateProps> = ({
 		<AddModal
 			open={open}
 			setOpen={onClose}
-			title={isUpdate ? 'Update Department' : 'Add Department'}
+			title={isUpdate ? 'Update Product Category' : 'Add Product Category'}
 			form={form}
 			onSubmit={onSubmit}
 		>
 			<FormField control={form.control} name='name' render={(props) => <CoreForm.Input {...props} />} />
+			<FormField control={form.control} name='short_name' render={(props) => <CoreForm.Input {...props} />} />
 			<FormField control={form.control} name='remarks' render={(props) => <CoreForm.Textarea {...props} />} />
 		</AddModal>
 	);
