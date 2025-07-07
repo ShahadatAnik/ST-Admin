@@ -7,12 +7,6 @@ import { IExpanseTableData } from './columns.type';
 // Department Columns
 export const expanseColumns = (): ColumnDef<IExpanseTableData>[] => [
 	{
-		accessorKey: 'name',
-		header: 'Name',
-		enableColumnFilter: false,
-		cell: (info) => info.getValue(),
-	},
-	{
 		accessorKey: 'job_id',
 		header: 'Job ID',
 		enableColumnFilter: false,
@@ -23,5 +17,23 @@ export const expanseColumns = (): ColumnDef<IExpanseTableData>[] => [
 		header: 'Expense At',
 		enableColumnFilter: false,
 		cell: (info) => <DateTime date={info.getValue() as Date} isTime={false} />,
+	},
+	{
+		accessorKey: 'type',
+		header: 'Type',
+		enableColumnFilter: false,
+		cell: (info) => info.getValue(),
+	},
+	{
+		accessorKey: 'amount',
+		header: 'Amount',
+		enableColumnFilter: false,
+		cell: (info) => info.getValue(),
+	},
+	{
+		accessorKey: 'reason',
+		header: 'Reason',
+		enableColumnFilter: false,
+		cell: (info) => info.getValue(),
 	},
 ];

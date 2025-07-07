@@ -5,17 +5,17 @@ import { Row } from '@tanstack/react-table';
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
 
-import { productColumns } from './config/columns';
-import { IProductTableData } from './config/columns/columns.type';
-import { useLibProducts } from './config/query';
+import { expanseColumns } from './config/columns';
+import { IExpanseTableData } from './config/columns/columns.type';
+import { useLibExpanse } from './config/query';
 
 const AddOrUpdate = lazy(() => import('./add-or-update'));
 const DeleteModal = lazy(() => import('@core/modal/delete'));
 
-const Product = () => {
-	const { data, isLoading, url, deleteData, postData, updateData, refetch } = useLibProducts<IProductTableData[]>();
+const Expanse = () => {
+	const { data, isLoading, url, deleteData, postData, updateData, refetch } = useLibExpanse<IExpanseTableData[]>();
 
-	const pageInfo = useMemo(() => new PageInfo('Library/Product', url, 'lib__product'), [url]);
+	const pageInfo = useMemo(() => new PageInfo('Library/Expanse', url, 'lib__expanse'), [url]);
 
 	// Add/Update Modal state
 	const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -24,9 +24,9 @@ const Product = () => {
 		setIsOpenAddModal(true);
 	};
 
-	const [updatedData, setUpdatedData] = useState<IProductTableData | null>(null);
+	const [updatedData, setUpdatedData] = useState<IExpanseTableData | null>(null);
 
-	const handleUpdate = (row: Row<IProductTableData>) => {
+	const handleUpdate = (row: Row<IExpanseTableData>) => {
 		setUpdatedData(row.original);
 		setIsOpenAddModal(true);
 	};
@@ -37,7 +37,7 @@ const Product = () => {
 		name: string;
 	} | null>(null);
 
-	const handleDelete = (row: Row<IProductTableData>) => {
+	const handleDelete = (row: Row<IExpanseTableData>) => {
 		setDeleteItem({
 			id: row?.original?.uuid,
 			name: row?.original?.name,
@@ -45,7 +45,7 @@ const Product = () => {
 	};
 
 	// Table Columns
-	const columns = productColumns();
+	const columns = expanseColumns();
 
 	return (
 		<PageProvider pageName={pageInfo.getTab()} pageTitle={pageInfo.getTabName()}>
@@ -86,4 +86,4 @@ const Product = () => {
 	);
 };
 
-export default Product;
+export default Expanse;

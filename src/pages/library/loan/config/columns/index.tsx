@@ -1,6 +1,6 @@
 import { ColumnDef, Row } from '@tanstack/react-table';
 
-import Transfer from '@/components/buttons/transfer';
+import Add from '@/components/buttons/add';
 import DateTime from '@/components/ui/date-time';
 
 import { ILoanTableData } from './columns.type';
@@ -29,9 +29,16 @@ export const loanColumns = (handlePaid: (row: Row<ILoanTableData>) => void): Col
 	},
 	{
 		accessorKey: 'total_paid_amount',
-		header: 'Paid Amount',
+		header: 'Paid | Add Payment',
 		enableColumnFilter: false,
-		cell: (info) => info.getValue(),
+		cell: (info) => {
+			return (
+				<div className='flex gap-2'>
+					{info?.getValue() as string | number}
+					<Add onClick={() => handlePaid?.(info.row)} />
+				</div>
+			);
+		},
 		size: 40,
 	},
 	{
@@ -47,11 +54,5 @@ export const loanColumns = (handlePaid: (row: Row<ILoanTableData>) => void): Col
 		header: 'Taken At',
 		enableColumnFilter: false,
 		cell: (info) => <DateTime date={info.getValue() as Date} isTime={false} />,
-	},
-	{
-		id: 'action_trx',
-		header: 'Paid',
-		cell: (info) => <Transfer onClick={() => handlePaid?.(info.row)} />,
-		size: 20,
 	},
 ];
