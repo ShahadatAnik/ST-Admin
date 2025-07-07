@@ -95,13 +95,6 @@ export const useOtherSubPurchaseCostCenter = <T>(query?: string) =>
 			: `/other/procure/sub-purchase-cost-center/value/label`,
 	});
 
-// * GET OTHER VENDOR
-export const useOtherVendor = <T>(query?: string) =>
-	useTQuery<T>({
-		queryKey: otherQK.vendor(query ? query : ''),
-		url: query ? `/other/procure/vendor/value/label?${query}` : `/other/procure/vendor/value/label`,
-	});
-
 // * GET OTHER INTERNAL COST CENTER
 export const useOtherInternalCostCenter = <T>() =>
 	useTQuery<T>({
@@ -163,9 +156,31 @@ export const useOtherBill = <T>(query?: string) =>
 		url: query ? `/other/procure/bill/value/label?${query}` : `/other/procure/bill/value/label`,
 	});
 
+//// ? LIBRARY GLOBAL QUERIES ? ////
 //* GET OTHER PRODUCT CATEGORY
 export const useOtherProductCategory = <T>() =>
 	useTQuery<T>({
 		queryKey: otherQK.productCategory(),
 		url: `/other/lib/product-category/value/label`,
+	});
+
+// * GET OTHER PRODUCT
+export const useOtherProduct = <T>(query?: string) =>
+	useTQuery<T>({
+		queryKey: otherQK.product(query ? query : ''),
+		url: query ? `/other/lib/product/value/label?${query}` : `/other/lib/product/value/label`,
+	});
+
+//* GET OTHER CLIENT
+export const useOtherClient = <T>(query?: string) =>
+	useTQuery<T>({
+		queryKey: otherQK.client(query ? query : ''),
+		url: query ? `/other/lib/client/value/label?${query}` : `/other/lib/client/value/label`,
+	});
+
+// * GET OTHER VENDOR
+export const useOtherVendor = <T>(query: string = '') =>
+	useTQuery<T>({
+		queryKey: otherQK.vendor(query),
+		url: query ? `/other/lib/vendor/value/label?${query}` : `/other/lib/vendor/value/label`,
 	});
