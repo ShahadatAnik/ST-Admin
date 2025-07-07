@@ -3,6 +3,7 @@ import { IRoute } from '@/types';
 
 const ProductCategory = lazy(() => import('@/pages/library/product-category'));
 const Product = lazy(() => import('@/pages/library/product'));
+const Client = lazy(() => import('@/pages/library/client'));
 
 const LibraryRoutes: IRoute[] = [
 	{
@@ -20,6 +21,13 @@ const LibraryRoutes: IRoute[] = [
 				path: '/lib/product',
 				element: <Product />,
 				page_name: 'lib_product',
+				actions: ['create', 'read', 'update', 'delete'],
+			},
+			{
+				name: 'Client',
+				path: '/lib/client',
+				element: <Client />,
+				page_name: 'lib_client',
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 		],
