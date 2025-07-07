@@ -1,4 +1,4 @@
-import { EUB_LOGO } from '@/assets/images/base64';
+import { ST_LOGO } from '@/assets/images/base64';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
 import { DEFAULT_FONT_SIZE, defaultStyle, PRIMARY_COLOR, styles } from './ui';
@@ -138,7 +138,7 @@ export const CUSTOM_PAGE_CONE_STICKER = ({
 // Company Information
 //
 // export const company = {
-// 	logo: EUB_LOGO.src,
+// 	logo: ST_LOGO.src,
 // 	name: 'Fortune Zipper LTD.',
 // 	address: 'Aukpara, Ashulia, Savar, DHK-1340',
 // 	email: 'Email: info@fortunezip.com',
