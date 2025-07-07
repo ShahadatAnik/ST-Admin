@@ -18,6 +18,7 @@ export const loanColumns = (handlePaid: (row: Row<ILoanTableData>) => void): Col
 				<CustomLink url={`/lib/loan/${uuid}/details`} label={info.getValue() as string} openInNewTab={true} />
 			);
 		},
+		size: 210,
 	},
 	{
 		accessorKey: 'type',
