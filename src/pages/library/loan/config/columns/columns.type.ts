@@ -9,4 +9,15 @@ export type ILoanTableData = {
 	updated_at: string;
 	remarks: string;
 	total_paid_amount: number;
+	loan_paid: LoanPaidTableData[];
+};
+
+export type LoanPaidTableData = {
+	uuid: string;
+	index: number;
+	amount: number;
+	type: string;
+	created_at: string;
+	updated_at: string;
+	remarks: string;
 };

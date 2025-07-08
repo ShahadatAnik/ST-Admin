@@ -1,7 +1,7 @@
 export const libQK = {
 	all: () => ['lib'],
 
-	//* library
-	product: () => [...libQK.all(), 'product'],
-	productByUUID: (uuid: string) => [...libQK.product(), uuid],
+	//* expanse
+	expanse: () => [...libQK.all(), 'expanse'],
+	expanseByUUID: (uuid: string) => [...libQK.expanse(), uuid],
 };

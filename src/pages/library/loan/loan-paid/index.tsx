@@ -199,7 +199,7 @@ const AddOrUpdate = () => {
 			onSubmit={onSubmit}
 		>
 			<CoreForm.DynamicFields
-				title='Loan Paid'
+				title={`Loan Paid: ${data?.lender_name}`}
 				form={form}
 				fieldName='loan_paid'
 				fieldDefs={useGenerateFieldDefs({
@@ -213,21 +213,21 @@ const AddOrUpdate = () => {
 			>
 				<tr>
 					<td className='border-t text-right font-semibold' colSpan={2}>
-						Grand Total:
-					</td>
-
-					<td className='border-t px-3 py-2' colSpan={3}>
-						{total.total_amount}
-					</td>
-				</tr>
-				<tr>
-					<td className='border-t text-right font-semibold' colSpan={2}>
+						Total paid:
+						<br />
+						Loan Amount:
+						<br />
 						Remaining:
 					</td>
 					<td className='border-t px-3 py-2' colSpan={3}>
+						{total.total_amount}
+						<br />
+						{data?.amount ?? 0}
+						<br />
 						{(data?.amount ?? 0) - total.total_amount}
 					</td>
 				</tr>
+				<tr></tr>
 			</CoreForm.DynamicFields>
 
 			<Suspense fallback={null}>

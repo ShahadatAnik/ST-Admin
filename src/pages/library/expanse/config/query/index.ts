@@ -2,16 +2,16 @@ import useTQuery from '@/hooks/useTQuery';
 
 import { libQK } from './queryKeys';
 
-// * Product
-export const useLibProducts = <T>() =>
+// * Expanse
+export const useLibExpanse = <T>() =>
 	useTQuery<T>({
-		queryKey: libQK.product(),
-		url: '/lib/product',
+		queryKey: libQK.expanse(),
+		url: '/lib/expense',
 	});
 
-export const useLibProductByUUID = <T>(uuid: string) =>
+export const useLibExpanseByUUID = <T>(uuid: string) =>
 	useTQuery<T>({
-		queryKey: libQK.productByUUID(uuid),
-		url: `/lib/product/${uuid}`,
+		queryKey: libQK.expanseByUUID(uuid),
+		url: `/lib/expense/${uuid}`,
 		enabled: !!uuid,
 	});
