@@ -264,7 +264,7 @@ const Entry = () => {
 	};
 
 	// Copy Handler
-	const handleCopy = (index: number) => {
+	const handleCopy: (index: number) => void = (index) => {
 		const field = form.watch('job_entry')[index];
 		append({
 			product_uuid: '',
