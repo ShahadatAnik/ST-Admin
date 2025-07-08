@@ -21,12 +21,12 @@ export const JOB_SCHEMA = z.object({
 			uuid: STRING_OPTIONAL,
 			job_uuid: STRING_OPTIONAL,
 			product_uuid: STRING_REQUIRED,
-			vendor_uuid: STRING_OPTIONAL,
+			vendor_uuid: STRING_OPTIONAL.nullable(),
 			quantity: NUMBER_REQUIRED.min(1, 'Quantity must be greater than 0'),
 			buying_unit_price: NUMBER_OPTIONAL,
 			selling_unit_price: NUMBER_OPTIONAL,
 			warranty_days: NUMBER_OPTIONAL,
-			purchased_at: STRING_OPTIONAL,
+			purchased_at: STRING_OPTIONAL.nullable(),
 			is_serial_needed: BOOLEAN_DEFAULT_VALUE(false),
 			product_serial: z.array(
 				z.object({
@@ -43,7 +43,19 @@ export const JOB_SCHEMA = z.object({
 export const JOB_NULL: Partial<IJob> = {
 	client_uuid: '',
 	work_order: '',
-	job_entry: [],
+	job_entry: [
+		{
+			product_uuid: '',
+			vendor_uuid: null,
+			quantity: 0,
+			buying_unit_price: 0,
+			selling_unit_price: 0,
+			warranty_days: 0,
+			purchased_at: null,
+			is_serial_needed: false,
+			product_serial: [],
+		},
+	],
 };
 
 export type IJob = z.infer<typeof JOB_SCHEMA>;

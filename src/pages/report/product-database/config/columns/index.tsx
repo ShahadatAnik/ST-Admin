@@ -26,9 +26,16 @@ export const productDatabaseColumns = (): ColumnDef<IProductDatabaseTableData>[]
 	},
 	{
 		accessorKey: 'job_id',
-		header: 'Job ID',
+		header: 'Job No.',
 		enableColumnFilter: false,
-		cell: (info) => info.getValue(),
+		cell: (info) => {
+			const { uuid, job_id } = info.row.original;
+			return (
+				<a href={`/lib/job/${uuid}/details`} className='underline' target='_blank'>
+					{job_id}
+				</a>
+			);
+		},
 	},
 	{
 		accessorKey: 'purchase_unit_price',

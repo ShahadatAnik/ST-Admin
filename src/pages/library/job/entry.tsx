@@ -93,6 +93,8 @@ const Entry = () => {
 									updatedData: entryUpdateData,
 								})
 								.then(() => {
+									if (product_serial.length === 0) return;
+
 									const serialPromises = product_serial.map((serial) => {
 										if (serial.uuid) {
 											return updateData.mutateAsync({
@@ -137,6 +139,8 @@ const Entry = () => {
 									newData: entryData,
 								})
 								.then(() => {
+									if (product_serial.length === 0) return;
+
 									const arrayData = product_serial.map((serial) => ({
 										...serial,
 										job_entry_uuid: entry_uuid,
@@ -201,6 +205,7 @@ const Entry = () => {
 								newData: entryData,
 							})
 							.then(() => {
+								if (product_serial.length === 0) return;
 								const arrayData = product_serial.map((serial) => ({
 									...serial,
 									job_entry_uuid: entry_uuid,
@@ -224,6 +229,7 @@ const Entry = () => {
 				})
 				.then(() => {
 					invalidateQuery();
+					invalidateQueryItem();
 					navigate('/lib/job');
 				})
 				.catch((error) => {
@@ -235,12 +241,12 @@ const Entry = () => {
 	const handleAdd = () => {
 		append({
 			product_uuid: '',
-			vendor_uuid: '',
+			vendor_uuid: null,
 			quantity: 0,
 			buying_unit_price: 0,
 			selling_unit_price: 0,
 			warranty_days: 0,
-			purchased_at: '',
+			purchased_at: null,
 			is_serial_needed: false,
 			product_serial: [],
 		});
@@ -267,7 +273,7 @@ const Entry = () => {
 		const field = form.watch('job_entry')[index];
 		append({
 			product_uuid: '',
-			vendor_uuid: '',
+			vendor_uuid: null,
 			quantity: field.quantity,
 			buying_unit_price: field.buying_unit_price,
 			selling_unit_price: field.selling_unit_price,
