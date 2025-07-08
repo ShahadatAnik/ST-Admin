@@ -88,7 +88,7 @@ const Entry = () => {
 		append({
 			uuid: '',
 			job_uuid: '',
-			index: 0,
+			index: fields.length + 1,
 			paid_at: '',
 			method: '',
 			amount: 0,
@@ -121,8 +121,13 @@ const Entry = () => {
 			paid_at: field.paid_at,
 			method: field.method,
 			amount: field.amount,
+			index: fields.length + 1,
 		});
 	};
+
+	const Total = form.watch('payment').reduce((acc, field) => {
+		return acc + field.amount;
+	}, 0);
 
 	return (
 		<CoreForm.AddEditWrapper title={isUpdate ? 'Edit Payment' : 'Add Payment'} form={form} onSubmit={onSubmit}>
@@ -139,7 +144,16 @@ const Entry = () => {
 				})}
 				handleAdd={handleAdd}
 				fields={fields}
-			/>
+			>
+				<tr>
+					<td colSpan={3} className='border-t px-5 text-right font-semibold'>
+						Total:
+					</td>
+					<td colSpan={2} className='border-t px-3 py-2'>
+						{Total}
+					</td>
+				</tr>
+			</CoreForm.DynamicFields>
 			<Suspense fallback={null}>
 				<DeleteModal
 					{...{

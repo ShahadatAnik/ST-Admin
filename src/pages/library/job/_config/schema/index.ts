@@ -28,7 +28,6 @@ export const JOB_SCHEMA = z.object({
 			warranty_days: NUMBER_REQUIRED.min(1, 'Warranty must be greater than 0'),
 			purchased_at: STRING_OPTIONAL,
 			is_serial_needed: BOOLEAN_DEFAULT_VALUE(false),
-			is_update: BOOLEAN_DEFAULT_VALUE(false),
 			product_serial: z.array(
 				z.object({
 					uuid: STRING_OPTIONAL,

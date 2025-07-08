@@ -15,6 +15,7 @@ const useGenerateSerial = ({ form, remove }: IGenerateFieldDefsProps): FieldDef[
 			header: 'Index',
 			accessorKey: 'index',
 			type: 'number',
+			disabled: true,
 		},
 		{
 			header: 'Serial',

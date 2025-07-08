@@ -242,7 +242,6 @@ const Entry = () => {
 			warranty_days: 0,
 			purchased_at: '',
 			is_serial_needed: false,
-			is_update: false,
 			product_serial: [],
 		});
 	};
@@ -275,7 +274,6 @@ const Entry = () => {
 			warranty_days: field.warranty_days,
 			purchased_at: field.purchased_at,
 			is_serial_needed: field.is_serial_needed,
-			is_update: field.is_update,
 			product_serial: field.product_serial,
 		});
 	};
