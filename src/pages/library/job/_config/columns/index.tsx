@@ -104,16 +104,16 @@ export const jobColumns = (
 		enableColumnFilter: false,
 		cell: (info) => info.getValue(),
 	},
-	{
-		accessorKey: 'payment_methods',
-		header: () => (
-			<>
-				Payment <br /> Methods
-			</>
-		),
-		enableColumnFilter: false,
-		cell: (info) => info.getValue(),
-	},
+	// {
+	// 	accessorKey: 'payment_methods',
+	// 	header: () => (
+	// 		<>
+	// 			Payment <br /> Methods
+	// 		</>
+	// 	),
+	// 	enableColumnFilter: false,
+	// 	cell: (info) => info.getValue(),
+	// },
 	{
 		id: 'payment',
 		header: 'Payment',
