@@ -10,7 +10,9 @@ const LoadPaid = lazy(() => import('@/pages/library/loan/loan-paid'));
 const LoadDetails = lazy(() => import('@/pages/library/loan/details'));
 const Job = lazy(() => import('@/pages/library/job'));
 const JobEntry = lazy(() => import('@/pages/library/job/entry'));
-const Expanse = lazy(() => import('@/pages/library/expanse'));
+const Expense = lazy(() => import('@/pages/library/expanse'));
+const ProfitSummary = lazy(() => import('@/pages/report/profit-summery'));
+const ProductDatabase = lazy(() => import('@/pages/report/product-database'));
 // const Payment = lazy(() => import('@/pages/library/job/payment/entry'));
 
 const LibraryRoutes: IRoute[] = [
@@ -69,10 +71,10 @@ const LibraryRoutes: IRoute[] = [
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 			{
-				name: 'Expanse',
-				path: '/lib/expanse',
-				element: <Expanse />,
-				page_name: 'lib__expanse',
+				name: 'Expense',
+				path: '/lib/expense',
+				element: <Expense />,
+				page_name: 'lib__expense',
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 			{
@@ -97,6 +99,25 @@ const LibraryRoutes: IRoute[] = [
 				page_name: 'lib__job_update',
 				actions: ['create', 'read', 'update', 'delete'],
 				hidden: true,
+			},
+			{
+				name: 'Report',
+				children: [
+					{
+						name: 'Profit Summary',
+						path: '/lib/profit-summary',
+						element: <ProfitSummary />,
+						page_name: 'lib__profit_summary',
+						actions: ['create', 'read', 'update', 'delete'],
+					},
+					{
+						name: 'Product Database',
+						path: '/lib/product-database',
+						element: <ProductDatabase />,
+						page_name: 'lib__product_database',
+						actions: ['create', 'read', 'update', 'delete'],
+					},
+				],
 			},
 			// {
 			// 	name: 'Job Payment',

@@ -15,7 +15,7 @@ const DeleteModal = lazy(() => import('@core/modal/delete'));
 const Expanse = () => {
 	const { data, isLoading, url, deleteData, postData, updateData, refetch } = useLibExpanse<IExpanseTableData[]>();
 
-	const pageInfo = useMemo(() => new PageInfo('Library/Expanse', url, 'lib__expanse'), [url]);
+	const pageInfo = useMemo(() => new PageInfo('Library/Expense', url, 'lib__expense'), [url]);
 
 	// Add/Update Modal state
 	const [isOpenAddModal, setIsOpenAddModal] = useState(false);

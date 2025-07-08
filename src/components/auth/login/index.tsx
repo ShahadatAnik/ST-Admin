@@ -21,7 +21,7 @@ const Login = () => {
 				<div className='relative bg-background px-4 py-10 shadow-lg sm:rounded-3xl sm:p-20'>
 					<div className='mx-auto'>
 						<span className='font-heading flex items-center justify-center text-2xl font-bold'>
-							<span className='text-4xl text-primary'>EUB - Admin</span>
+							<span className='text-4xl text-primary'>ST - Admin</span>
 						</span>
 						<LoginForm />
 					</div>
