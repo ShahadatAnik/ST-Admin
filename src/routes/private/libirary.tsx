@@ -13,7 +13,8 @@ const JobEntry = lazy(() => import('@/pages/library/job/entry'));
 const Expense = lazy(() => import('@/pages/library/expanse'));
 const ProfitSummary = lazy(() => import('@/pages/report/profit-summery'));
 const ProductDatabase = lazy(() => import('@/pages/report/product-database'));
-// const Payment = lazy(() => import('@/pages/library/job/payment/entry'));
+const Payment = lazy(() => import('@/pages/library/job/payment/entry'));
+const JobDetails = lazy(() => import('@/pages/library/job/details'));
 
 const LibraryRoutes: IRoute[] = [
 	{
@@ -119,14 +120,22 @@ const LibraryRoutes: IRoute[] = [
 					},
 				],
 			},
-			// {
-			// 	name: 'Job Payment',
-			// 	path: '/lib/job/:uuid/payment',
-			// 	element: <Payment />,
-			// 	page_name: 'lib__job_payment',
-			// 	actions: ['create', 'read', 'update', 'delete'],
-			// 	hidden: true,
-			// },
+			{
+				name: 'Job Payment',
+				path: '/lib/job/:uuid/payment',
+				element: <Payment />,
+				page_name: 'lib__job_payment',
+				actions: ['create', 'read', 'update', 'delete'],
+				hidden: true,
+			},
+			{
+				name: 'Job Details',
+				path: '/lib/job/:uuid/details',
+				element: <JobDetails />,
+				page_name: 'lib__job_details',
+				actions: ['read'],
+				hidden: true,
+			},
 		],
 	},
 ];

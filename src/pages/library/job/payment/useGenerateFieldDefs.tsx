@@ -28,6 +28,7 @@ const useGenerateFieldDefs = ({ data, copy, remove, form }: IGenerateFieldDefsPr
 			header: 'Index',
 			accessorKey: 'index',
 			type: 'number',
+			disabled: true,
 		},
 		{
 			header: 'Paid At',

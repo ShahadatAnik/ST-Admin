@@ -1,6 +1,7 @@
-import { Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import useAuth from '@/hooks/useAuth';
 import useRHF from '@/hooks/useRHF';
 
@@ -17,6 +18,8 @@ import { IJobTableData } from './_config/columns/columns.type';
 import { useJob, useJobByUUID } from './_config/query';
 import { IJob, JOB_NULL, JOB_SCHEMA } from './_config/schema';
 import useGenerateFieldDefs from './useGenerateFieldDefs';
+
+const AddOrUpdate = lazy(() => import('./serial-add-update'));
 
 const Entry = () => {
 	const { uuid } = useParams();
@@ -52,6 +55,18 @@ const Entry = () => {
 	// Submit handler
 	async function onSubmit(values: IJob) {
 		const { job_entry, ...rest } = values;
+
+		const indexes = job_entry
+			.map((entry, i) =>
+				entry.is_serial_needed && entry.product_serial.length !== entry.quantity ? i + 1 : null
+			)
+			.filter((i): i is number => i !== null);
+
+		if (indexes.length > 0) {
+			toast.warning(`Please ensure that all serials are filled for the following entries: ${indexes.join(', ')}`);
+			return;
+		}
+
 		if (isUpdate) {
 			// UPDATE ITEM
 			const itemUpdatedData = {
@@ -67,27 +82,78 @@ const Entry = () => {
 				.then(() => {
 					const entryUpdatePromise = job_entry.map((entry) => {
 						if (entry.uuid) {
+							const { product_serial, ...rest } = entry;
 							const entryUpdateData = {
-								...entry,
+								...rest,
 								updated_at: getDateTime(),
 							};
-							return updateData.mutateAsync({
-								url: `/lib/job-entry/${entry.uuid}`,
-								updatedData: entryUpdateData,
-							});
+							const singleUpdatePromise = updateData
+								.mutateAsync({
+									url: `/lib/job-entry/${rest.uuid}`,
+									updatedData: entryUpdateData,
+								})
+								.then(() => {
+									const serialPromises = product_serial.map((serial) => {
+										if (serial.uuid) {
+											return updateData.mutateAsync({
+												url: `/lib/product-serial/${serial.uuid}`,
+												updatedData: {
+													...serial,
+													updated_at: getDateTime(),
+												},
+											});
+										} else {
+											return postData.mutateAsync({
+												url: `/lib/product-serial`,
+												newData: {
+													...serial,
+													job_entry_uuid: entry.uuid,
+													created_at: getDateTime(),
+													created_by: user?.uuid,
+													uuid: nanoid(),
+												},
+											});
+										}
+									});
+									return Promise.all(serialPromises);
+								});
+							return singleUpdatePromise;
 						} else {
+							const { product_serial, ...rest } = entry;
+
+							const entry_uuid = nanoid(); // Generate UUID upfront so you can use it in both entry and serials
+
 							const entryData = {
-								...entry,
+								...rest,
 								created_at: getDateTime(),
 								created_by: user?.uuid,
-								uuid: nanoid(),
 								job_uuid: uuid,
+								uuid: entry_uuid,
 							};
 
-							return postData.mutateAsync({
-								url: `/lib/job-entry`,
-								newData: entryData,
-							});
+							const singleEntryPromise = postData
+								.mutateAsync({
+									url: `/lib/job-entry`,
+									newData: entryData,
+								})
+								.then(() => {
+									const arrayData = product_serial.map((serial) => ({
+										...serial,
+										job_entry_uuid: entry_uuid,
+										created_at: getDateTime(),
+										created_by: user?.uuid,
+										uuid: nanoid(),
+									}));
+
+									const serialPromises = postData.mutateAsync({
+										url: `/lib/product-serial`,
+										newData: arrayData,
+									});
+
+									return serialPromises;
+								});
+
+							return singleEntryPromise;
 						}
 					});
 
@@ -116,22 +182,45 @@ const Entry = () => {
 					newData: itemData,
 				})
 				.then(() => {
-					const entryPromise = job_entry.map((entry) => {
+					const entryPromises = job_entry.map((entry) => {
+						const { product_serial, ...rest } = entry;
+
+						const entry_uuid = nanoid(); // Generate UUID upfront so you can use it in both entry and serials
+
 						const entryData = {
-							...entry,
+							...rest,
 							created_at: getDateTime(),
 							created_by: user?.uuid,
-							uuid: nanoid(),
 							job_uuid: itemData.uuid,
+							uuid: entry_uuid,
 						};
 
-						return postData.mutateAsync({
-							url: `/lib/job-entry`,
-							newData: entryData,
-						});
+						const singleEntryPromise = postData
+							.mutateAsync({
+								url: `/lib/job-entry`,
+								newData: entryData,
+							})
+							.then(() => {
+								const arrayData = product_serial.map((serial) => ({
+									...serial,
+									job_entry_uuid: entry_uuid,
+									created_at: getDateTime(),
+									created_by: user?.uuid,
+									uuid: nanoid(),
+								}));
+
+								const serialPromises = postData.mutateAsync({
+									url: `/lib/product-serial`,
+									newData: arrayData,
+								});
+
+								return serialPromises;
+							});
+
+						return singleEntryPromise;
 					});
 
-					Promise.all([...entryPromise]);
+					Promise.all([...entryPromises]);
 				})
 				.then(() => {
 					invalidateQuery();
@@ -153,6 +242,7 @@ const Entry = () => {
 			warranty_days: 0,
 			purchased_at: '',
 			is_serial_needed: false,
+			product_serial: [],
 		});
 	};
 
@@ -173,7 +263,7 @@ const Entry = () => {
 	};
 
 	// Copy Handler
-	const handleCopy = (index: number) => {
+	const handleCopy: (index: number) => void = (index) => {
 		const field = form.watch('job_entry')[index];
 		append({
 			product_uuid: '',
@@ -184,7 +274,16 @@ const Entry = () => {
 			warranty_days: field.warranty_days,
 			purchased_at: field.purchased_at,
 			is_serial_needed: field.is_serial_needed,
+			product_serial: field.product_serial,
 		});
+	};
+
+	const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+	const [updatedData, setUpdatedData] = useState<IJob['job_entry'][number] | null>(null);
+	const handleSerial = (index: number) => {
+		const field = form.watch('job_entry')[index];
+		setUpdatedData({ ...field, index });
+		setIsOpenAddModal(true);
 	};
 
 	return (
@@ -216,11 +315,26 @@ const Entry = () => {
 					remove: handleRemove,
 					form: form,
 					isUpdate,
+					handleSerial: handleSerial,
 				})}
 				handleAdd={handleAdd}
 				fields={fields}
 			/>
 			<Suspense fallback={null}>
+				<AddOrUpdate
+					{...{
+						url: `/lib/product-serial`,
+						open: isOpenAddModal,
+						setOpen: setIsOpenAddModal,
+						updatedData,
+						setUpdatedData,
+						postData,
+						updateData,
+						deleteData,
+						form: form,
+					}}
+				/>
+				,
 				<DeleteModal
 					{...{
 						deleteItem,

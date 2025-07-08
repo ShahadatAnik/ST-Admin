@@ -1,7 +1,14 @@
 import { method } from 'lodash';
+import { index } from 'node_modules/handsontable/helpers/dom';
 import { z } from 'zod';
 
-import { BOOLEAN_DEFAULT_VALUE, NUMBER_REQUIRED, STRING_OPTIONAL, STRING_REQUIRED } from '@/utils/validators';
+import {
+	BOOLEAN_DEFAULT_VALUE,
+	NUMBER_OPTIONAL,
+	NUMBER_REQUIRED,
+	STRING_OPTIONAL,
+	STRING_REQUIRED,
+} from '@/utils/validators';
 
 //* Job Schema
 export const JOB_SCHEMA = z.object({
@@ -10,6 +17,7 @@ export const JOB_SCHEMA = z.object({
 
 	job_entry: z.array(
 		z.object({
+			index: NUMBER_OPTIONAL, // needed for serial input modal
 			uuid: STRING_OPTIONAL,
 			job_uuid: STRING_OPTIONAL,
 			product_uuid: STRING_REQUIRED,
@@ -20,6 +28,14 @@ export const JOB_SCHEMA = z.object({
 			warranty_days: NUMBER_REQUIRED.min(1, 'Warranty must be greater than 0'),
 			purchased_at: STRING_OPTIONAL,
 			is_serial_needed: BOOLEAN_DEFAULT_VALUE(false),
+			product_serial: z.array(
+				z.object({
+					uuid: STRING_OPTIONAL,
+					job_entry_uuid: STRING_OPTIONAL,
+					serial: STRING_REQUIRED,
+					index: NUMBER_REQUIRED.min(1, 'Index must be greater than 0'),
+				})
+			),
 		})
 	),
 });

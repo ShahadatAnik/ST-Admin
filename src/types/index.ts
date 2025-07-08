@@ -1,5 +1,7 @@
+import { IJob } from '@/pages/library/job/_config/schema';
 import { UseMutationResult } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { UseFormReturn } from 'react-hook-form';
 import { RouteObject } from 'react-router-dom';
 
 export type IAuthResponse = {
@@ -145,6 +147,47 @@ export interface IDefaultAddOrUpdateProps {
 		any
 	>;
 }
+
+export interface IDefaultSerialAddOrUpdateProps {
+	url: string;
+	open: boolean;
+	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	setUpdatedData?: React.Dispatch<React.SetStateAction<any | null>>;
+	postData: UseMutationResult<
+		IToast,
+		AxiosError<IToast, any>,
+		{
+			url: string;
+			newData: any;
+			isOnCloseNeeded?: boolean;
+			onClose?: (() => void) | undefined;
+		},
+		any
+	>;
+	updateData: UseMutationResult<
+		IToast,
+		AxiosError<IToast, any>,
+		{
+			url: string;
+			updatedData: any;
+			isOnCloseNeeded?: boolean;
+			onClose?: (() => void) | undefined;
+		},
+		any
+	>;
+	deleteData: UseMutationResult<
+		IToast,
+		AxiosError<IToast, any>,
+		{
+			url: string;
+			isOnCloseNeeded?: boolean;
+			onClose?: (() => void) | undefined;
+		},
+		void
+	>;
+	form: UseFormReturn<IJob>;
+}
+
 export interface IDefaultImageAddOrUpdateProps {
 	url: string;
 	open: boolean;
