@@ -1,6 +1,7 @@
 //* Profit Summery
 export type IProductDatabaseTableData = {
 	uuid: string;
+	jon_id: string;
 	product_name: string;
 	serial_number: string;
 	client_name: string;

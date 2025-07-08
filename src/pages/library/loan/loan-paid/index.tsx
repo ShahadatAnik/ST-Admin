@@ -88,7 +88,7 @@ const AddOrUpdate = () => {
 					.then(() => form.reset(LOAN_PAID_NULL))
 					.then(() => {
 						invalidateTestDetails(); // TODO: Update invalidate query
-						navigate(`/lib/loan/${uuid}`);
+						navigate(`/lib/loan/${uuid}/details`);
 					});
 			} catch (err) {
 				console.error(`Error with Promise.all: ${err}`);
@@ -182,16 +182,9 @@ const AddOrUpdate = () => {
 		});
 	};
 
-	const total = form.getValues()?.loan_paid.reduce(
-		(acc, curr) => {
-			acc.total_amount += curr.amount;
+	const loanPaidValues = form.watch('loan_paid') || [];
 
-			return acc;
-		},
-		{
-			total_amount: 0,
-		}
-	);
+	const total = loanPaidValues.reduce((sum: number, item: any) => sum + (Number(item?.amount) || 0), 0);
 	return (
 		<CoreForm.AddEditWrapper
 			title={isUpdate ? 'Edit Loan Paid Entry' : ' Add Loan Paid Entry'}
@@ -220,11 +213,11 @@ const AddOrUpdate = () => {
 						Remaining:
 					</td>
 					<td className='border-t px-3 py-2' colSpan={3}>
-						{total.total_amount}
+						{total}
 						<br />
 						{data?.amount ?? 0}
 						<br />
-						{(data?.amount ?? 0) - total.total_amount}
+						{(data?.amount ?? 0) - total}
 					</td>
 				</tr>
 				<tr></tr>

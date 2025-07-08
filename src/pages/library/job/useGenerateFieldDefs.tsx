@@ -32,15 +32,9 @@ const useGenerateFieldDefs = ({ data, copy, remove, form, handleSerial }: IGener
 			type: 'select',
 			placeholder: 'Select Product',
 			options: products || [],
-			// unique: true,
-			// excludeOptions: data.job_entry.map((item) => item.product_uuid) || [],
-		},
-		{
-			header: 'Vendor',
-			accessorKey: 'vendor_uuid',
-			type: 'select',
-			placeholder: 'Select Vendor',
-			options: vendors || [],
+			unique: true,
+			excludeOptions: data.job_entry.map((item) => item.product_uuid) || [],
+			width: 'min-w-40',
 		},
 		{
 			header: 'Quantity',
@@ -56,6 +50,13 @@ const useGenerateFieldDefs = ({ data, copy, remove, form, handleSerial }: IGener
 			header: 'Selling Unit Price',
 			accessorKey: 'selling_unit_price',
 			type: 'number',
+		},
+		{
+			header: 'Vendor',
+			accessorKey: 'vendor_uuid',
+			type: 'select',
+			placeholder: 'Select Vendor',
+			options: vendors || [],
 		},
 		{
 			header: 'Warranty Days',
