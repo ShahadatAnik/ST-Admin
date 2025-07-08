@@ -10,7 +10,7 @@ const LoadPaid = lazy(() => import('@/pages/library/loan/loan-paid'));
 const LoadDetails = lazy(() => import('@/pages/library/loan/details'));
 const Job = lazy(() => import('@/pages/library/job'));
 const JobEntry = lazy(() => import('@/pages/library/job/entry'));
-const Expanse = lazy(() => import('@/pages/library/expanse'));
+const Expense = lazy(() => import('@/pages/library/expanse'));
 const ProfitSummary = lazy(() => import('@/pages/report/profit-summery'));
 // const Payment = lazy(() => import('@/pages/library/job/payment/entry'));
 
@@ -70,10 +70,10 @@ const LibraryRoutes: IRoute[] = [
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 			{
-				name: 'Expanse',
-				path: '/lib/expanse',
-				element: <Expanse />,
-				page_name: 'lib__expanse',
+				name: 'Expense',
+				path: '/lib/expense',
+				element: <Expense />,
+				page_name: 'lib__expense',
 				actions: ['create', 'read', 'update', 'delete'],
 			},
 			{
