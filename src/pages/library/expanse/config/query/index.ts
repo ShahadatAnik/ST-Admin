@@ -6,12 +6,12 @@ import { libQK } from './queryKeys';
 export const useLibExpanse = <T>() =>
 	useTQuery<T>({
 		queryKey: libQK.expanse(),
-		url: '/lib/expanse',
+		url: '/lib/expense',
 	});
 
 export const useLibExpanseByUUID = <T>(uuid: string) =>
 	useTQuery<T>({
 		queryKey: libQK.expanseByUUID(uuid),
-		url: `/lib/expanse/${uuid}`,
+		url: `/lib/expense/${uuid}`,
 		enabled: !!uuid,
 	});
