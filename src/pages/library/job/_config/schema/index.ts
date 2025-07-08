@@ -23,9 +23,9 @@ export const JOB_SCHEMA = z.object({
 			product_uuid: STRING_REQUIRED,
 			vendor_uuid: STRING_OPTIONAL,
 			quantity: NUMBER_REQUIRED.min(1, 'Quantity must be greater than 0'),
-			buying_unit_price: NUMBER_REQUIRED.min(1, 'Buying unit price must be greater than 0'),
-			selling_unit_price: NUMBER_REQUIRED.min(1, 'Selling unit price must be greater than 0'),
-			warranty_days: NUMBER_REQUIRED.min(1, 'Warranty must be greater than 0'),
+			buying_unit_price: NUMBER_OPTIONAL,
+			selling_unit_price: NUMBER_OPTIONAL,
+			warranty_days: NUMBER_OPTIONAL,
 			purchased_at: STRING_OPTIONAL,
 			is_serial_needed: BOOLEAN_DEFAULT_VALUE(false),
 			product_serial: z.array(
