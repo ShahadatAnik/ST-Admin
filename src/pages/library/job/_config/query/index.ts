@@ -39,3 +39,11 @@ export const useJobPayment = <T>(uuid: string) =>
 		url: `/lib/job-payment/${uuid}`,
 		enabled: !!uuid,
 	});
+
+// * Product Serial
+export const useProductSerial = <T>(uuid: string) =>
+	useTQuery<T>({
+		queryKey: jobQK.productSerial(uuid),
+		url: `/lib/product-serial/${uuid}`,
+		enabled: !!uuid,
+	});

@@ -1,6 +1,7 @@
 import { UseFormWatch } from 'react-hook-form';
 
 import FieldActionButton from '@/components/buttons/field-action';
+import Transfer from '@/components/buttons/transfer';
 import { IFormSelectOption } from '@/components/core/form/types';
 import { FormField } from '@/components/ui/form';
 import CoreForm from '@core/form';
@@ -17,9 +18,10 @@ interface IGenerateFieldDefsProps {
 	watch?: UseFormWatch<IJob>;
 	form: any;
 	isUpdate: boolean;
+	handleSerial: (index: number) => void;
 }
 
-const useGenerateFieldDefs = ({ data, copy, remove, form }: IGenerateFieldDefsProps): FieldDef[] => {
+const useGenerateFieldDefs = ({ data, copy, remove, form, handleSerial }: IGenerateFieldDefsProps): FieldDef[] => {
 	const { data: products } = useOtherProduct<IFormSelectOption[]>();
 	const { data: vendors } = useOtherVendor<IFormSelectOption[]>();
 
@@ -30,8 +32,8 @@ const useGenerateFieldDefs = ({ data, copy, remove, form }: IGenerateFieldDefsPr
 			type: 'select',
 			placeholder: 'Select Product',
 			options: products || [],
-			unique: true,
-			excludeOptions: data.job_entry.map((item) => item.product_uuid) || [],
+			// unique: true,
+			// excludeOptions: data.job_entry.map((item) => item.product_uuid) || [],
 		},
 		{
 			header: 'Vendor',
@@ -77,7 +79,31 @@ const useGenerateFieldDefs = ({ data, copy, remove, form }: IGenerateFieldDefsPr
 		{
 			header: 'Serial Needed',
 			accessorKey: 'is_serial_needed',
-			type: 'checkbox',
+			type: 'custom',
+			component: (index: number) => {
+				return (
+					<div className='flex justify-evenly gap-2'>
+						<FormField
+							control={form.control}
+							name={`job_entry.${index}.is_serial_needed`}
+							render={(props) => (
+								<CoreForm.Checkbox
+									{...props}
+									disableLabel
+									disabled={form.watch(`job_entry.${index}.product_serial`).length > 0}
+								/>
+							)}
+						/>
+						{form.watch(`job_entry.${index}.is_serial_needed`) && (
+							<Transfer
+								onClick={() => handleSerial(index)}
+								disabled={!form.watch(`job_entry.${index}.is_serial_needed`)}
+								type='button'
+							/>
+						)}
+					</div>
+				);
+			},
 		},
 		{
 			header: 'Actions',

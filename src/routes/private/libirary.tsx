@@ -9,7 +9,7 @@ const Loan = lazy(() => import('@/pages/library/loan'));
 const LoadPaid = lazy(() => import('@/pages/library/loan/loan-paid'));
 const Job = lazy(() => import('@/pages/library/job'));
 const JobEntry = lazy(() => import('@/pages/library/job/entry'));
-// const Payment = lazy(() => import('@/pages/library/job/payment/entry'));
+const Payment = lazy(() => import('@/pages/library/job/payment/entry'));
 
 const LibraryRoutes: IRoute[] = [
 	{
@@ -81,14 +81,14 @@ const LibraryRoutes: IRoute[] = [
 				actions: ['create', 'read', 'update', 'delete'],
 				hidden: true,
 			},
-			// {
-			// 	name: 'Job Payment',
-			// 	path: '/lib/job/:uuid/payment',
-			// 	element: <Payment />,
-			// 	page_name: 'lib__job_payment',
-			// 	actions: ['create', 'read', 'update', 'delete'],
-			// 	hidden: true,
-			// },
+			{
+				name: 'Job Payment',
+				path: '/lib/job/:uuid/payment',
+				element: <Payment />,
+				page_name: 'lib__job_payment',
+				actions: ['create', 'read', 'update', 'delete'],
+				hidden: true,
+			},
 		],
 	},
 ];
