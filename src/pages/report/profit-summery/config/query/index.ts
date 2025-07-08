@@ -6,5 +6,5 @@ import { libQK } from './queryKeys';
 export const useLibReportProfitSummary = <T>() =>
 	useTQuery<T>({
 		queryKey: libQK.profitSummary(),
-		url: '/lib/job-profit-summary',
+		url: '/report/job/profit-summary',
 	});

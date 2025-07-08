@@ -12,6 +12,7 @@ const Job = lazy(() => import('@/pages/library/job'));
 const JobEntry = lazy(() => import('@/pages/library/job/entry'));
 const Expense = lazy(() => import('@/pages/library/expanse'));
 const ProfitSummary = lazy(() => import('@/pages/report/profit-summery'));
+const ProductDatabase = lazy(() => import('@/pages/report/product-database'));
 // const Payment = lazy(() => import('@/pages/library/job/payment/entry'));
 
 const LibraryRoutes: IRoute[] = [
@@ -107,6 +108,13 @@ const LibraryRoutes: IRoute[] = [
 						path: '/lib/profit-summary',
 						element: <ProfitSummary />,
 						page_name: 'lib__profit_summary',
+						actions: ['create', 'read', 'update', 'delete'],
+					},
+					{
+						name: 'Product Database',
+						path: '/lib/product-database',
+						element: <ProductDatabase />,
+						page_name: 'lib__product_database',
 						actions: ['create', 'read', 'update', 'delete'],
 					},
 				],

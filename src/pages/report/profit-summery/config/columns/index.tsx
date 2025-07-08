@@ -5,7 +5,7 @@ import DateTime from '@/components/ui/date-time';
 import { IProfitSummeryTableData } from './columns.type';
 
 // Department Columns
-export const expanseColumns = (): ColumnDef<IProfitSummeryTableData>[] => [
+export const profitSummeryColumns = (): ColumnDef<IProfitSummeryTableData>[] => [
 	{
 		accessorKey: 'job_id',
 		header: 'Job ID',

@@ -4,7 +4,7 @@ import { Row } from '@tanstack/react-table';
 
 import { PageInfo } from '@/utils';
 
-import { expanseColumns } from './config/columns';
+import { profitSummeryColumns } from './config/columns';
 import { IProfitSummeryTableData } from './config/columns/columns.type';
 import { useLibReportProfitSummary } from './config/query';
 
@@ -13,7 +13,7 @@ const Expanse = () => {
 
 	const pageInfo = useMemo(() => new PageInfo('Library/Profit Summary', url, 'lib__profit_summary'), [url]);
 	// Table Columns
-	const columns = expanseColumns();
+	const columns = profitSummeryColumns();
 
 	return (
 		<PageProvider pageName={pageInfo.getTab()} pageTitle={pageInfo.getTabName()}>
