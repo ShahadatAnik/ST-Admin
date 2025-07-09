@@ -2,6 +2,7 @@ import { lazy, useMemo, useState } from 'react';
 import { PageProvider, TableProvider } from '@/context';
 import { Row } from '@tanstack/react-table';
 
+import { useOtherClient } from '@/lib/common-queries/other';
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
 
@@ -14,6 +15,7 @@ const DeleteModal = lazy(() => import('@core/modal/delete'));
 
 const DetailsPage = () => {
 	const { data, isLoading, url, updateData, deleteData, postData, refetch } = useClient<IClientTableData[]>();
+	const { invalidateQuery: invalidateClient } = useOtherClient();
 
 	const pageInfo = useMemo(() => new PageInfo('Library/Client', url, 'lib__client'), [url]);
 
@@ -82,6 +84,7 @@ const DetailsPage = () => {
 							setDeleteItem,
 							url,
 							deleteData,
+							invalidateQuery: invalidateClient,
 						}}
 					/>,
 				])}

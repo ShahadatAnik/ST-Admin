@@ -2,6 +2,7 @@ import { lazy, useMemo, useState } from 'react';
 import { PageProvider, TableProvider } from '@/context';
 import { Row } from '@tanstack/react-table';
 
+import { useOtherProduct } from '@/lib/common-queries/other';
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
 
@@ -14,6 +15,7 @@ const DeleteModal = lazy(() => import('@core/modal/delete'));
 
 const Product = () => {
 	const { data, isLoading, url, deleteData, postData, updateData, refetch } = useLibProducts<IProductTableData[]>();
+	const { invalidateQuery: invalidateProduct } = useOtherProduct();
 
 	const pageInfo = useMemo(() => new PageInfo('Library/Product', url, 'lib__product'), [url]);
 
@@ -78,6 +80,7 @@ const Product = () => {
 							setDeleteItem,
 							url,
 							deleteData,
+							invalidateQuery: invalidateProduct,
 						}}
 					/>,
 				])}

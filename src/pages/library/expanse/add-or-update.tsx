@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLibReportProfitSummary } from '@/pages/report/profit-summery/config/query';
 import useAuth from '@/hooks/useAuth';
 import useRHF from '@/hooks/useRHF';
 
@@ -29,6 +30,7 @@ const AddOrUpdate: React.FC<IExpanseAddOrUpdateProps> = ({
 
 	const { user } = useAuth();
 	const { invalidateQuery: invalidateDesignations } = useLibExpanse();
+	const { invalidateQuery: invalidateExpense } = useLibReportProfitSummary();
 	const { data } = useLibExpanseByUUID<IExpanseTableData>(updatedData?.uuid as string);
 	const { data: jobOptions } = useOtherJob<IFormSelectOption[]>();
 
@@ -74,6 +76,8 @@ const AddOrUpdate: React.FC<IExpanseAddOrUpdateProps> = ({
 			},
 			onClose,
 		});
+
+		invalidateExpense();
 	}
 
 	return (
