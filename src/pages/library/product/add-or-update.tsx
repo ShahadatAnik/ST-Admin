@@ -7,7 +7,7 @@ import { FormField } from '@/components/ui/form';
 import CoreForm from '@core/form';
 import { AddModal } from '@core/modal';
 
-import { useOtherProductCategory } from '@/lib/common-queries/other';
+import { useOtherProduct, useOtherProductCategory } from '@/lib/common-queries/other';
 import nanoid from '@/lib/nanoid';
 import { getDateTime } from '@/utils';
 
@@ -29,6 +29,7 @@ const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
 
 	const { user } = useAuth();
 	const { invalidateQuery: invalidateDesignations } = useLibProducts();
+	const { invalidateQuery: invalidateProduct } = useOtherProduct();
 	const { data } = useLibProductByUUID<IProductTableData>(updatedData?.uuid as string);
 	const { data: productCategoryOptions } = useOtherProductCategory<IFormSelectOption[]>();
 
@@ -74,6 +75,8 @@ const AddOrUpdate: React.FC<IProductAddOrUpdateProps> = ({
 			},
 			onClose,
 		});
+
+		invalidateProduct();
 	}
 
 	return (

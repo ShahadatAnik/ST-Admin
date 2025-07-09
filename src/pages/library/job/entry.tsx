@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { useLibReportProfitSummary } from '@/pages/report/profit-summery/config/query';
 import { useFieldArray } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -35,6 +36,7 @@ const Entry = () => {
 		invalidateQuery: invalidateQueryItem,
 	} = useJobByUUID(uuid as string);
 	const { invalidateQuery } = useJob<IJobTableData[]>();
+	const { invalidateQuery: invalidateExpense } = useLibReportProfitSummary();
 	const { data: clients } = useOtherClient<IFormSelectOption[]>();
 
 	const form = useRHF(JOB_SCHEMA, JOB_NULL);
@@ -166,18 +168,22 @@ const Entry = () => {
 				.then(() => {
 					invalidateQuery();
 					invalidateQueryItem();
-					navigate('/lib/job');
+					invalidateExpense();
+				})
+				.then(() => {
+					navigate(`/lib/job/${uuid}/details`);
 				})
 				.catch((error) => {
 					console.error('Error updating news:', error);
 				});
 		} else {
 			// ADD NEW ITEM
+			const jobUUID = nanoid();
 			const itemData = {
 				...rest,
 				created_at: getDateTime(),
 				created_by: user?.uuid,
-				uuid: nanoid(),
+				uuid: jobUUID,
 			};
 
 			postData
@@ -206,6 +212,7 @@ const Entry = () => {
 							})
 							.then(() => {
 								if (product_serial.length === 0) return;
+
 								const arrayData = product_serial.map((serial) => ({
 									...serial,
 									job_entry_uuid: entry_uuid,
@@ -229,8 +236,10 @@ const Entry = () => {
 				})
 				.then(() => {
 					invalidateQuery();
-					invalidateQueryItem();
-					navigate('/lib/job');
+					invalidateExpense();
+				})
+				.then(() => {
+					navigate(`/lib/job/${jobUUID}/details`);
 				})
 				.catch((error) => {
 					console.error('Error adding news:', error);

@@ -2,6 +2,7 @@ import { lazy, useMemo, useState } from 'react';
 import { PageProvider, TableProvider } from '@/context';
 import { Row } from '@tanstack/react-table';
 
+import { useOtherVendor } from '@/lib/common-queries/other';
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
 
@@ -14,6 +15,7 @@ const DeleteModal = lazy(() => import('@core/modal/delete'));
 
 const DetailsPage = () => {
 	const { data, isLoading, url, updateData, deleteData, postData, refetch } = useVendor<IVendorTableData[]>();
+	const { invalidateQuery: invalidateVendor } = useOtherVendor();
 
 	const pageInfo = useMemo(() => new PageInfo('Library/Vendor', url, 'lib__vendor'), [url]);
 
@@ -82,6 +84,7 @@ const DetailsPage = () => {
 							setDeleteItem,
 							url,
 							deleteData,
+							invalidateQuery: invalidateVendor,
 						}}
 					/>,
 				])}

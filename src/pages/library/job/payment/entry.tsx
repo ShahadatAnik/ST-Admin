@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useState } from 'react';
+import { useLibReportProfitSummary } from '@/pages/report/profit-summery/config/query';
 import { useFieldArray } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
@@ -29,6 +30,7 @@ const Entry = () => {
 		invalidateQuery: invalidateQueryItem,
 	} = useJobPayment(uuid as string);
 	const { invalidateQuery } = useJob<IJobTableData[]>();
+	const { invalidateQuery: invalidateExpense } = useLibReportProfitSummary();
 
 	const form = useRHF(JOB_PAYMENT_SCHEMA, JOB_PAYMENT_NULL);
 
@@ -36,7 +38,7 @@ const Entry = () => {
 		control: form.control,
 		name: 'payment',
 	});
-	console.log(form.getValues());
+
 	// Reset form values when data is updated
 	useEffect(() => {
 		if (data && isUpdate) {
@@ -78,6 +80,7 @@ const Entry = () => {
 			await Promise.all(entryUpdatePromise);
 			invalidateQuery();
 			invalidateQueryItem();
+			invalidateExpense();
 			navigate('/lib/job');
 		} catch (error) {
 			console.error('Error updating payments:', error);
@@ -125,8 +128,8 @@ const Entry = () => {
 		});
 	};
 
-	const Total = form.watch('payment').reduce((acc, field) => {
-		return acc + field.amount;
+	const Total = form.watch('payment').reduce((acc, item) => {
+		return acc + +item.amount;
 	}, 0);
 
 	return (

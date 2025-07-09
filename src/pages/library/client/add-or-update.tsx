@@ -6,6 +6,7 @@ import { FormField } from '@/components/ui/form';
 import CoreForm from '@core/form';
 import { AddModal } from '@core/modal';
 
+import { useOtherClient } from '@/lib/common-queries/other';
 import nanoid from '@/lib/nanoid';
 import { getDateTime } from '@/utils';
 
@@ -26,6 +27,7 @@ const AddOrUpdate: React.FC<IClientAddOrUpdateProps> = ({
 
 	const { user } = useAuth();
 	const { data } = useClientByUUID(updatedData?.uuid as string);
+	const { invalidateQuery: invalidateClient } = useOtherClient();
 
 	const form = useRHF(CLIENT_SCHEMA, CLIENT_NULL);
 
@@ -68,6 +70,8 @@ const AddOrUpdate: React.FC<IClientAddOrUpdateProps> = ({
 				onClose,
 			});
 		}
+
+		invalidateClient();
 	}
 
 	return (
