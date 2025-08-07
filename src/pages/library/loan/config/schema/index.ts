@@ -1,11 +1,10 @@
-import { take } from 'lodash';
 import { z } from 'zod';
 
 import { NUMBER_DOUBLE_REQUIRED, STRING_NULLABLE, STRING_OPTIONAL, STRING_REQUIRED } from '@/utils/validators';
 
 //* Loan Schema
 export const LOAN_SCHEMA = z.object({
-	lender_name: STRING_REQUIRED,
+	lender_name: STRING_NULLABLE,
 	type: z.enum(['friend', 'business', 'family']),
 	amount: NUMBER_DOUBLE_REQUIRED.gt(0),
 	taken_at: STRING_REQUIRED,
@@ -13,7 +12,7 @@ export const LOAN_SCHEMA = z.object({
 });
 
 export const LOAN_NULL: Partial<ILoan> = {
-	lender_name: '',
+	lender_name: null,
 	type: 'business',
 	amount: 0,
 	taken_at: '',

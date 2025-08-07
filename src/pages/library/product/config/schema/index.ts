@@ -1,13 +1,6 @@
 import { z } from 'zod';
 
-import {
-	FORTUNE_ZIP_EMAIL_PATTERN,
-	PASSWORD,
-	PHONE_NUMBER_NULLABLE,
-	STRING_NULLABLE,
-	STRING_OPTIONAL,
-	STRING_REQUIRED,
-} from '@/utils/validators';
+import { STRING_NULLABLE, STRING_REQUIRED } from '@/utils/validators';
 
 //* Product Schema
 export const PRODUCT_SCHEMA = z.object({
