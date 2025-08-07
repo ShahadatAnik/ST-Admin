@@ -1,11 +1,10 @@
-import { method } from 'lodash';
-import { index } from 'node_modules/handsontable/helpers/dom';
 import { z } from 'zod';
 
 import {
 	BOOLEAN_DEFAULT_VALUE,
 	NUMBER_OPTIONAL,
 	NUMBER_REQUIRED,
+	STRING_NULLABLE,
 	STRING_OPTIONAL,
 	STRING_REQUIRED,
 } from '@/utils/validators';
@@ -32,7 +31,7 @@ export const JOB_SCHEMA = z.object({
 				z.object({
 					uuid: STRING_OPTIONAL,
 					job_entry_uuid: STRING_OPTIONAL,
-					serial: STRING_REQUIRED,
+					serial: STRING_NULLABLE,
 					index: NUMBER_REQUIRED.min(1, 'Index must be greater than 0'),
 				})
 			),

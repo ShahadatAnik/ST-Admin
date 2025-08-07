@@ -1,34 +1,27 @@
-import { start } from 'repl';
 import { z } from 'zod';
 
-import {
-	EMAIL_REQUIRED,
-	PHONE_NUMBER_REQUIRED,
-	STRING_NULLABLE,
-	STRING_OPTIONAL,
-	STRING_REQUIRED,
-} from '@/utils/validators';
+import { STRING_NULLABLE, STRING_REQUIRED } from '@/utils/validators';
 
 //* Client Schema
 export const VENDOR_SCHEMA = z.object({
 	name: STRING_REQUIRED,
-	phone: STRING_REQUIRED,
-	address: STRING_REQUIRED,
-	purpose: STRING_REQUIRED,
-	starting_date: STRING_REQUIRED,
-	ending_date: STRING_REQUIRED,
-	product_type: STRING_REQUIRED,
+	phone: STRING_NULLABLE,
+	address: STRING_NULLABLE,
+	purpose: STRING_NULLABLE,
+	starting_date: STRING_NULLABLE,
+	ending_date: STRING_NULLABLE,
+	product_type: STRING_NULLABLE,
 	remarks: STRING_NULLABLE,
 });
 
 export const VENDOR_NULL: Partial<IVendor> = {
 	name: '',
-	phone: '',
-	address: '',
-	purpose: '',
-	starting_date: '',
-	ending_date: '',
-	product_type: '',
+	phone: null,
+	address: null,
+	purpose: null,
+	starting_date: null,
+	ending_date: null,
+	product_type: null,
 	remarks: null,
 };
 
