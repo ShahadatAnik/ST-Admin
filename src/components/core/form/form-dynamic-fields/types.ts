@@ -86,6 +86,9 @@ type FieldSelectCreate = {
 	type: 'select-create';
 	placeholder?: string;
 	options: IFormSelectOption[];
+	disabled?: boolean;
+	excludeOptions?: string[];
+	unique?: boolean;
 };
 
 export type FieldDef = {

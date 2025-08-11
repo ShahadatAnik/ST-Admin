@@ -29,12 +29,12 @@ const useGenerateFieldDefs = ({ data, copy, remove, form, handleSerial }: IGener
 		{
 			header: 'Product',
 			accessorKey: 'product_uuid',
-			type: 'select',
+			type: 'select-create',
 			placeholder: 'Select Product',
 			options: products || [],
+			width: 'min-w-40',
 			unique: true,
 			excludeOptions: data.job_entry.map((item) => item.product_uuid) || [],
-			width: 'min-w-40',
 		},
 		{
 			header: 'Quantity',
@@ -54,7 +54,7 @@ const useGenerateFieldDefs = ({ data, copy, remove, form, handleSerial }: IGener
 		{
 			header: 'Vendor',
 			accessorKey: 'vendor_uuid',
-			type: 'select',
+			type: 'select-create',
 			placeholder: 'Select Vendor',
 			options: vendors || [],
 		},

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useLibReportProfitSummary } from '@/pages/report/profit-summery/config/query';
+import { update } from 'lodash';
 import { useFieldArray } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -88,6 +89,7 @@ const Entry = () => {
 							const entryUpdateData = {
 								...rest,
 								updated_at: getDateTime(),
+								updated_by: user?.uuid,
 							};
 							const singleUpdatePromise = updateData
 								.mutateAsync({
@@ -349,7 +351,7 @@ const Entry = () => {
 						form: form,
 					}}
 				/>
-				,
+
 				<DeleteModal
 					{...{
 						deleteItem,

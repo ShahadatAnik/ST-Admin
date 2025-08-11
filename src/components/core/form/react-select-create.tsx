@@ -15,6 +15,8 @@ const FormReactSelectCreate: React.FC<FormReactSelectProps> = ({
 	disableLabel,
 	isMulti = false,
 	menuPortalTarget,
+	unique = false,
+	excludeOptions,
 	valueType = 'string',
 }) => {
 	return (
@@ -27,9 +29,15 @@ const FormReactSelectCreate: React.FC<FormReactSelectProps> = ({
 			)}
 			<FormControl>
 				<ReactSelectCreatable
-					className='min-w-48'
+					className='min-w-64'
 					isMulti={isMulti}
-					options={options}
+					options={
+						unique
+							? options?.filter(
+									(item: IFormSelectOption) => !excludeOptions?.includes(item.value as string)
+								)
+							: options
+					}
 					isDisabled={isDisabled}
 					placeholder={placeholder}
 					menuPortalTarget={menuPortalTarget}
