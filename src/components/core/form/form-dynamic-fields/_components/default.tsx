@@ -217,6 +217,24 @@ const DefaultDynamicFields: React.FC<Omit<DynamicFieldsProps, 'title' | 'viewAs'
 															)}
 														/>
 													)}
+													{fieldDef.type === 'select-create' && (
+														<FormField
+															control={form.control}
+															name={`${fieldName}.${fieldIndex + startIndex}.${fieldDef.accessorKey}`}
+															render={(props) => (
+																<CoreForm.ReactSelectCreate
+																	menuPortalTarget={document.body}
+																	options={fieldDef.options}
+																	placeholder={fieldDef.placeholder}
+																	disableLabel
+																	disabled={fieldDef.disabled}
+																	unique={fieldDef.unique}
+																	excludeOptions={fieldDef.excludeOptions}
+																	{...props}
+																/>
+															)}
+														/>
+													)}
 												</TableCell>
 											);
 										}
