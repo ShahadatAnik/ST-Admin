@@ -230,6 +230,8 @@ const DefaultDynamicFields: React.FC<Omit<DynamicFieldsProps, 'title' | 'viewAs'
 																	disabled={fieldDef.disabled}
 																	unique={fieldDef.unique}
 																	excludeOptions={fieldDef.excludeOptions}
+																	apiUrl={fieldDef.apiUrl}
+																	postData={fieldDef.postData}
 																	{...props}
 																/>
 															)}

@@ -5,13 +5,13 @@ import { STRING_NULLABLE, STRING_REQUIRED } from '@/utils/validators';
 //* Product Schema
 export const PRODUCT_SCHEMA = z.object({
 	name: STRING_REQUIRED,
-	product_category_uuid: STRING_REQUIRED,
+	product_category_uuid: STRING_NULLABLE.optional(),
 	remarks: STRING_NULLABLE,
 });
 
 export const PRODUCT_NULL: Partial<IProduct> = {
 	name: '',
-	product_category_uuid: '',
+	product_category_uuid: null,
 	remarks: null,
 };
 

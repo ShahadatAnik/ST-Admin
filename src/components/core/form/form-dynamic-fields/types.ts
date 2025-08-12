@@ -1,3 +1,6 @@
+import { IToast } from '@/types';
+import { UseMutationResult } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { FieldArrayWithId, UseFormReturn } from 'react-hook-form';
 
 import { IFormSelectOption } from '@core/form/types';
@@ -89,6 +92,18 @@ type FieldSelectCreate = {
 	disabled?: boolean;
 	excludeOptions?: string[];
 	unique?: boolean;
+	apiUrl?: string;
+	postData?: UseMutationResult<
+		IToast,
+		AxiosError<IToast, any>,
+		{
+			url: string;
+			newData: any;
+			isOnCloseNeeded?: boolean;
+			onClose?: (() => void) | undefined;
+		},
+		any
+	>;
 };
 
 export type FieldDef = {

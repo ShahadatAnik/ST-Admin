@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useLibReportProfitSummary } from '@/pages/report/profit-summery/config/query';
-import { update } from 'lodash';
 import { useFieldArray } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -83,11 +82,12 @@ const Entry = () => {
 					updatedData: itemUpdatedData,
 				})
 				.then(() => {
-					const entryUpdatePromise = job_entry.map((entry) => {
+					const entryUpdatePromise = job_entry.map((entry, index) => {
 						if (entry.uuid) {
 							const { product_serial, ...rest } = entry;
 							const entryUpdateData = {
 								...rest,
+								index: index,
 								updated_at: getDateTime(),
 								updated_by: user?.uuid,
 							};
@@ -127,7 +127,7 @@ const Entry = () => {
 						} else {
 							const { product_serial, ...rest } = entry;
 
-							const entry_uuid = nanoid(); // Generate UUID upfront so you can use it in both entry and serials
+							const entry_uuid = nanoid();
 
 							const entryData = {
 								...rest,
@@ -135,6 +135,7 @@ const Entry = () => {
 								created_by: user?.uuid,
 								job_uuid: uuid,
 								uuid: entry_uuid,
+								index: index,
 							};
 
 							const singleEntryPromise = postData
@@ -194,10 +195,10 @@ const Entry = () => {
 					newData: itemData,
 				})
 				.then(() => {
-					const entryPromises = job_entry.map((entry) => {
+					const entryPromises = job_entry.map((entry, index) => {
 						const { product_serial, ...rest } = entry;
 
-						const entry_uuid = nanoid(); // Generate UUID upfront so you can use it in both entry and serials
+						const entry_uuid = nanoid();
 
 						const entryData = {
 							...rest,
@@ -205,6 +206,7 @@ const Entry = () => {
 							created_by: user?.uuid,
 							job_uuid: itemData.uuid,
 							uuid: entry_uuid,
+							index: index,
 						};
 
 						const singleEntryPromise = postData

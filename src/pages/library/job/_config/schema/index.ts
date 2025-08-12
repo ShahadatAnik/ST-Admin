@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import {
 	BOOLEAN_DEFAULT_VALUE,
+	NUMBER_DOUBLE_REQUIRED,
 	NUMBER_OPTIONAL,
 	NUMBER_REQUIRED,
 	STRING_NULLABLE,
@@ -12,18 +13,18 @@ import {
 //* Job Schema
 export const JOB_SCHEMA = z.object({
 	client_uuid: STRING_REQUIRED,
-	work_order: STRING_REQUIRED,
+	work_order: STRING_NULLABLE.optional(),
 
 	job_entry: z.array(
 		z.object({
-			index: NUMBER_OPTIONAL, // needed for serial input modal
+			index: NUMBER_OPTIONAL,
 			uuid: STRING_OPTIONAL,
 			job_uuid: STRING_OPTIONAL,
 			product_uuid: STRING_REQUIRED,
 			vendor_uuid: STRING_OPTIONAL.nullable(),
 			quantity: NUMBER_REQUIRED.min(1, 'Quantity must be greater than 0'),
-			buying_unit_price: NUMBER_OPTIONAL,
-			selling_unit_price: NUMBER_OPTIONAL,
+			buying_unit_price: NUMBER_DOUBLE_REQUIRED,
+			selling_unit_price: NUMBER_DOUBLE_REQUIRED,
 			warranty_days: NUMBER_OPTIONAL,
 			purchased_at: STRING_OPTIONAL.nullable(),
 			is_serial_needed: BOOLEAN_DEFAULT_VALUE(false),
@@ -31,7 +32,7 @@ export const JOB_SCHEMA = z.object({
 				z.object({
 					uuid: STRING_OPTIONAL,
 					job_entry_uuid: STRING_OPTIONAL,
-					serial: STRING_NULLABLE,
+					serial: STRING_NULLABLE.optional(),
 					index: NUMBER_REQUIRED.min(1, 'Index must be greater than 0'),
 				})
 			),
