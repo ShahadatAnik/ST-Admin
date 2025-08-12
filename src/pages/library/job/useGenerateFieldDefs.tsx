@@ -22,8 +22,8 @@ interface IGenerateFieldDefsProps {
 }
 
 const useGenerateFieldDefs = ({ data, copy, remove, form, handleSerial }: IGenerateFieldDefsProps): FieldDef[] => {
-	const { data: products } = useOtherProduct<IFormSelectOption[]>();
-	const { data: vendors } = useOtherVendor<IFormSelectOption[]>();
+	const { data: products, postData } = useOtherProduct<IFormSelectOption[]>();
+	const { data: vendors, postData: postDataVendor } = useOtherVendor<IFormSelectOption[]>();
 
 	return [
 		{
@@ -34,6 +34,8 @@ const useGenerateFieldDefs = ({ data, copy, remove, form, handleSerial }: IGener
 			options: products || [],
 			width: 'min-w-40',
 			unique: true,
+			apiUrl: '/lib/product',
+			postData: postData,
 			excludeOptions: data.job_entry.map((item) => item.product_uuid) || [],
 		},
 		{
@@ -57,6 +59,8 @@ const useGenerateFieldDefs = ({ data, copy, remove, form, handleSerial }: IGener
 			type: 'select-create',
 			placeholder: 'Select Vendor',
 			options: vendors || [],
+			apiUrl: '/lib/vendor',
+			postData: postDataVendor,
 		},
 		{
 			header: 'Warranty Days',
