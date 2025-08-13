@@ -1,17 +1,20 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useLibReportProfitSummary } from '@/pages/report/profit-summery/config/query';
+import { FileSpreadsheet } from 'lucide-react';
+import { CSVLink } from 'react-csv';
 import { useFieldArray } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import useAuth from '@/hooks/useAuth';
 import useRHF from '@/hooks/useRHF';
 
+import ReadFile from '@/components/buttons/read-file';
 import { IFormSelectOption } from '@/components/core/form/types';
 import { FormField } from '@/components/ui/form';
 import CoreForm from '@core/form';
 import { DeleteModal } from '@core/modal';
 
-import { useOtherClient } from '@/lib/common-queries/other';
+import { useOtherClient, useOtherProduct, useOtherVendor } from '@/lib/common-queries/other';
 import nanoid from '@/lib/nanoid';
 import { getDateTime } from '@/utils';
 
@@ -19,6 +22,7 @@ import { IJobTableData } from './_config/columns/columns.type';
 import { useJob, useJobByUUID } from './_config/query';
 import { IJob, JOB_NULL, JOB_SCHEMA } from './_config/schema';
 import useGenerateFieldDefs from './useGenerateFieldDefs';
+import { transformInputToOutput } from './utils';
 
 const AddOrUpdate = lazy(() => import('./serial-add-update'));
 
@@ -26,7 +30,7 @@ const Entry = () => {
 	const { uuid } = useParams();
 	const isUpdate = !!uuid;
 	const navigate = useNavigate();
-
+	const [isLoading, setIsLoading] = useState(false);
 	const { user } = useAuth();
 	const {
 		data,
@@ -35,9 +39,12 @@ const Entry = () => {
 		deleteData,
 		invalidateQuery: invalidateQueryItem,
 	} = useJobByUUID(uuid as string);
+
 	const { invalidateQuery } = useJob<IJobTableData[]>();
 	const { invalidateQuery: invalidateExpense } = useLibReportProfitSummary();
 	const { data: clients } = useOtherClient<IFormSelectOption[]>();
+	const { data: products, invalidateQuery: invalidateProducts } = useOtherProduct<IFormSelectOption[]>();
+	const { data: vendors, invalidateQuery: invalidateVendors } = useOtherVendor<IFormSelectOption[]>();
 
 	const form = useRHF(JOB_SCHEMA, JOB_NULL);
 
@@ -53,6 +60,71 @@ const Entry = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data, isUpdate]);
+
+	const handleUploadFile = async (data: any[]) => {
+		try {
+			setIsLoading(true);
+			const createdVendors = new Map<string, string>();
+			const createdProducts = new Map<string, string>();
+			for (const item of data) {
+				const existingProduct = products?.find((product) => product.label === item?.product);
+
+				if (!existingProduct && item?.product) {
+					if (createdProducts.has(item.product)) {
+						item.product = createdProducts.get(item.product);
+					} else {
+						const productUuid = nanoid();
+						await postData.mutateAsync({
+							url: `/lib/product`,
+							newData: {
+								uuid: productUuid,
+								name: item.product,
+								created_by: user?.uuid,
+								created_at: getDateTime(),
+							},
+						});
+
+						createdProducts.set(item.product, productUuid);
+						item.product = productUuid;
+						await invalidateProducts();
+					}
+				} else if (existingProduct) {
+					item.product = existingProduct.value;
+				}
+
+				const existingVendor = vendors?.find((vendor) => vendor.label === item?.vendor);
+
+				if (!existingVendor && item?.vendor) {
+					if (createdVendors.has(item.vendor)) {
+						item.vendor = createdVendors.get(item.vendor);
+					} else {
+						const vendorUuid = nanoid();
+						await postData.mutateAsync({
+							url: `/lib/vendor`,
+							newData: {
+								uuid: vendorUuid,
+								name: item.vendor,
+								created_by: user?.uuid,
+								created_at: getDateTime(),
+							},
+						});
+
+						createdVendors.set(item.vendor, vendorUuid);
+						item.vendor = vendorUuid;
+						await invalidateVendors();
+					}
+				} else if (existingVendor) {
+					item.vendor = existingVendor.value;
+				}
+			}
+
+			const newData = await transformInputToOutput(data);
+			form.setValue('job_entry', newData, { shouldDirty: true });
+			setIsLoading(false);
+		} catch (error) {
+			console.error('Error uploading file:', error);
+		}
+	};
 
 	// Submit handler
 	async function onSubmit(values: IJob) {
@@ -305,6 +377,23 @@ const Entry = () => {
 		setIsOpenAddModal(true);
 	};
 
+	const csvData = [
+		'product',
+		'vendor',
+		'quantity',
+		'buying_unit_price',
+		'selling_unit_price',
+		'warranty_days',
+		'purchased_at',
+	];
+	const fieldDefs = useGenerateFieldDefs({
+		data: form.getValues(),
+		copy: handleCopy,
+		remove: handleRemove,
+		form: form,
+		isUpdate,
+		handleSerial: handleSerial,
+	});
 	return (
 		<CoreForm.AddEditWrapper title={isUpdate ? 'Edit Job' : 'Add Job'} form={form} onSubmit={onSubmit}>
 			<CoreForm.Section title={`Job`}>
@@ -323,22 +412,34 @@ const Entry = () => {
 				/>
 				<FormField control={form.control} name='work_order' render={(props) => <CoreForm.Input {...props} />} />
 			</CoreForm.Section>
+			{isLoading && <div>Loading...</div>}
+			{!isLoading && (
+				<CoreForm.DynamicFields
+					title='Job Entries'
+					form={form}
+					fieldDefs={fieldDefs}
+					extraButton={
+						<div className='flex items-center gap-4'>
+							{csvData && Array.isArray(csvData) && csvData.length > 0 && (
+								<CSVLink
+									title='Demo Sheet'
+									type='button'
+									className='btn btn-warning btn-xs flex gap-1 rounded bg-yellow-500 p-2'
+									data={[csvData]}
+								>
+									<FileSpreadsheet className='size-4 text-white' />
+									<span className='text-xs text-slate-100'>Demo</span>
+								</CSVLink>
+							)}
 
-			<CoreForm.DynamicFields
-				title='Job Entries'
-				form={form}
-				fieldName='job_entry'
-				fieldDefs={useGenerateFieldDefs({
-					data: form.getValues(),
-					copy: handleCopy,
-					remove: handleRemove,
-					form: form,
-					isUpdate,
-					handleSerial: handleSerial,
-				})}
-				handleAdd={handleAdd}
-				fields={fields}
-			/>
+							<ReadFile onChange={handleUploadFile} />
+						</div>
+					}
+					fieldName='job_entry'
+					handleAdd={handleAdd}
+					fields={fields}
+				/>
+			)}
 			<Suspense fallback={null}>
 				<AddOrUpdate
 					{...{
