@@ -67,6 +67,8 @@ export type IJobDetailsTableData = {
 	payment: IJobDetailsTablePayment[];
 	created_at: string;
 	created_by_name: string;
+	to_date: string;
+	subject: string;
 	updated_at: string;
 	remarks: string;
 };

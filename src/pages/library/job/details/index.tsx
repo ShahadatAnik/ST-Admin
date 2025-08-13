@@ -29,8 +29,14 @@ const Index = () => {
 
 	return (
 		<div className='space-y-8'>
-			<iframe src={data2} width='100%' height='1000px'></iframe>
-			<Information data={(data || []) as IJobDetailsTableData} />
+			<div className='flex gap-2'>
+				<div className='w-1/3'>
+					<Information data={(data || []) as IJobDetailsTableData} />
+				</div>
+				<div className='w-2/3'>
+					<iframe src={data2} width={'100%'} height={'100%'}></iframe>
+				</div>
+			</div>
 			<JonEntryTable data={(data || []) as IJobDetailsTableData} isLoading={isLoading} />
 			<PaymentTable data={(data || []) as IJobDetailsTableData} isLoading={isLoading} />
 		</div>
