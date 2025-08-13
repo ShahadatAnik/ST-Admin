@@ -14,6 +14,8 @@ import {
 export const JOB_SCHEMA = z.object({
 	client_uuid: STRING_REQUIRED,
 	work_order: STRING_NULLABLE.optional(),
+	to_date: STRING_OPTIONAL.nullable(),
+	subject: STRING_OPTIONAL.optional(),
 
 	job_entry: z.array(
 		z.object({

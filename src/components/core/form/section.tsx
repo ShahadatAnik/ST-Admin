@@ -13,10 +13,11 @@ const FormSection: React.FC<IFormSectionProps> = ({ children, className, title, 
 					{extraHeader}
 				</div>
 				<div
-					className={cn(
-						'grid grid-cols-1 gap-2.5 rounded-b-md border bg-base p-4 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3',
+					className={
 						className
-					)}
+							? className
+							: 'grid grid-cols-1 gap-2.5 rounded-md border bg-base p-4 shadow-sm sm:grid-cols-2 sm:gap-4 lg:grid-cols-3'
+					}
 				>
 					{children}
 				</div>

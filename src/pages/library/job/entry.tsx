@@ -396,7 +396,10 @@ const Entry = () => {
 	});
 	return (
 		<CoreForm.AddEditWrapper title={isUpdate ? 'Edit Job' : 'Add Job'} form={form} onSubmit={onSubmit}>
-			<CoreForm.Section title={`Job`}>
+			<CoreForm.Section
+				title={`Job`}
+				className='grid grid-cols-2 gap-2.5 rounded-md border bg-base p-4 shadow-sm'
+			>
 				<FormField
 					control={form.control}
 					name='client_uuid'
@@ -410,7 +413,13 @@ const Entry = () => {
 						/>
 					)}
 				/>
+				<FormField
+					control={form.control}
+					name='to_date'
+					render={(props) => <CoreForm.DatePicker {...props} />}
+				/>
 				<FormField control={form.control} name='work_order' render={(props) => <CoreForm.Input {...props} />} />
+				<FormField control={form.control} name='subject' render={(props) => <CoreForm.Input {...props} />} />
 			</CoreForm.Section>
 			{isLoading && <div>Loading...</div>}
 			{!isLoading && (
