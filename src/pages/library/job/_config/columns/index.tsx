@@ -151,7 +151,7 @@ export const jobEntryDetails = (
 		accessorKey: 'buying_unit_price',
 		header: () => (
 			<>
-				Buying Unite <br /> Price
+				Buying Unit <br /> Price
 			</>
 		),
 		enableColumnFilter: false,
@@ -161,7 +161,7 @@ export const jobEntryDetails = (
 		accessorKey: 'selling_unit_price',
 		header: () => (
 			<>
-				Selling Unite <br /> Price
+				Selling Unit <br /> Price
 			</>
 		),
 		enableColumnFilter: false,
