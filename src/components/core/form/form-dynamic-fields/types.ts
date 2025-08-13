@@ -144,4 +144,5 @@ export interface DynamicFieldsProps {
 	className?: string;
 	children?: React.ReactNode;
 	startIndex?: number;
+	extraButton?: React.ReactNode;
 }
