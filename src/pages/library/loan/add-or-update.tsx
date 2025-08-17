@@ -55,7 +55,7 @@ const AddOrUpdate: React.FC<ILoanAddOrUpdateProps> = ({
 		if (isUpdate) {
 			// UPDATE ITEM
 			updateData.mutateAsync({
-				url: `${url}/${updatedData?.uuid}`,
+				url: `/lib/loan/${updatedData?.uuid}`,
 				updatedData: {
 					...values,
 					updated_at: getDateTime(),
@@ -98,6 +98,13 @@ const AddOrUpdate: React.FC<ILoanAddOrUpdateProps> = ({
 			/>
 			<FormField control={form.control} name='taken_at' render={(props) => <CoreForm.DatePicker {...props} />} />
 			<FormField control={form.control} name='remarks' render={(props) => <CoreForm.Textarea {...props} />} />
+			{isUpdate && (
+				<FormField
+					control={form.control}
+					name='is_completed'
+					render={(props) => <CoreForm.Switch {...props} />}
+				/>
+			)}
 		</AddModal>
 	);
 };
