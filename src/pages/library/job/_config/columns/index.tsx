@@ -158,10 +158,32 @@ export const jobEntryDetails = (
 		cell: (info) => info.getValue(),
 	},
 	{
+		accessorFn: (row) => row.buying_unit_price * row.quantity,
+		id: 'total_buying_price',
+		header: () => (
+			<>
+				Total Buying <br /> Price
+			</>
+		),
+		enableColumnFilter: false,
+		cell: (info) => info.getValue(),
+	},
+	{
 		accessorKey: 'selling_unit_price',
 		header: () => (
 			<>
 				Selling Unit <br /> Price
+			</>
+		),
+		enableColumnFilter: false,
+		cell: (info) => info.getValue(),
+	},
+	{
+		accessorFn: (row) => row.selling_unit_price * row.quantity,
+		id: 'total_selling_price',
+		header: () => (
+			<>
+				Total Selling <br /> Price
 			</>
 		),
 		enableColumnFilter: false,
