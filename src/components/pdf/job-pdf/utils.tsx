@@ -18,42 +18,113 @@ export const getPageFooter = ({
 	data?: IJobDetailsTableData;
 	user?: any;
 }) => {
-	return {
-		widths: ['*', '*', '*'],
-		body: [
-			[
-				{
-					text: 'info@synaptech.com | 01771199541',
-					fontSize: DEFAULT_FONT_SIZE - 4,
-					border: [false, true, false, false],
-				},
-				{
-					text: `Synap Tech.cloud `,
-					fontSize: DEFAULT_FONT_SIZE - 4,
-					alignment: 'center',
-					border: [false, true, false, false],
-				},
-				{
-					text: `Page: ${currentPage} of ${pageCount}`,
-					fontSize: DEFAULT_FONT_SIZE - 4,
-					alignment: 'right',
-					border: [false, true, false, false],
-				},
+	const isLastPage = currentPage === pageCount;
+
+	if (isLastPage) {
+		// Last page footer with signature sections
+		return {
+			widths: ['*', '*', '*'],
+			body: [
+				[
+					{
+						text: 'Authorizes By',
+						alignment: 'center',
+						border: [false, true, false, false],
+					},
+					{
+						text: '',
+						border: [false, false, false, false],
+					},
+					{
+						text: 'Customer',
+						alignment: 'center',
+						border: [false, true, false, false],
+					},
+				],
+				[
+					{
+						text: '',
+						alignment: 'center',
+						border: [false, false, false, false],
+					},
+					{
+						text: '',
+						border: [false, false, false, false],
+					},
+					{
+						text: '',
+						alignment: 'center',
+						border: [false, false, false, false],
+					},
+				],
+				[
+					{
+						text: 'info@synaptech.com | 01771199541',
+						fontSize: DEFAULT_FONT_SIZE - 4,
+						border: [false, false, false, false],
+					},
+					{
+						text: `Synap Tech.cloud `,
+						fontSize: DEFAULT_FONT_SIZE - 4,
+						alignment: 'center',
+						border: [false, false, false, false],
+					},
+					{
+						text: `Page: ${currentPage} of ${pageCount}`,
+						fontSize: DEFAULT_FONT_SIZE - 4,
+						alignment: 'right',
+						border: [false, false, false, false],
+					},
+				],
 			],
-		],
-	};
+		};
+	} else {
+		// Regular page footer without signature sections
+		return {
+			widths: ['*', '*', '*'],
+			body: [
+				[
+					{
+						text: 'info@synaptech.com | 01771199541',
+						fontSize: DEFAULT_FONT_SIZE - 4,
+						border: [false, false, false, false],
+					},
+					{
+						text: `Synap Tech.cloud `,
+						fontSize: DEFAULT_FONT_SIZE - 4,
+						alignment: 'center',
+						border: [false, false, false, false],
+					},
+					{
+						text: `Page: ${currentPage} of ${pageCount}`,
+						fontSize: DEFAULT_FONT_SIZE - 4,
+						alignment: 'right',
+						border: [false, false, false, false],
+					},
+				],
+			],
+		};
+	}
 };
+
+interface Product {
+	index: number;
+	serial: string;
+	job_entry_uuid: string;
+}
 interface ProductInput {
 	index: number;
 	product_name: string;
 	warranty_days: number;
 	quantity: number;
 	selling_unit_price: number;
+	product_serial: Product[];
 }
 
 interface TransformedProduct {
 	index: number;
 	description: string;
+	serial: string[];
 	warranty: string;
 	quantity: number;
 	unit_price: string;
@@ -65,12 +136,16 @@ export function transformProductDataArray(dataArray: ProductInput[]): Transforme
 	return dataArray.map((data) => {
 		const totalPrice = data.quantity * data.selling_unit_price;
 		const totalPriceWith5Percent = totalPrice + (totalPrice * 5) / 100;
+		const serial = data?.product_serial
+			.filter((item) => item.serial && item.serial.trim() !== '')
+			.map((item) => item.serial);
 
 		return {
 			index: data?.index + 1,
 			description: data.product_name,
 			warranty: data.warranty_days === 0 ? 'N/A' : data.warranty_days + ' days',
 			quantity: data.quantity,
+			serial: serial,
 			unit_price: data.selling_unit_price.toFixed(2),
 			total_price: totalPrice.toFixed(2),
 			total_price_with_5_percent: totalPriceWith5Percent.toFixed(2),
