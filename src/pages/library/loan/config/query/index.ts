@@ -3,10 +3,10 @@ import useTQuery from '@/hooks/useTQuery';
 import { libQK } from './queryKeys';
 
 // * Loan
-export const useLibLoans = <T>() =>
+export const useLibLoans = <T>(query?: string) =>
 	useTQuery<T>({
-		queryKey: libQK.loan(),
-		url: '/lib/loan',
+		queryKey: libQK.loan(query),
+		url: query ? `/lib/loan?${query}` : '/lib/loan',
 	});
 
 export const useLibLoanByUUID = <T>(uuid: string) =>

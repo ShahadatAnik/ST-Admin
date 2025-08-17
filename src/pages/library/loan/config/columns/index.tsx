@@ -36,13 +36,13 @@ export const loanColumns = (handlePaid: (row: Row<ILoanTableData>) => void): Col
 	},
 	{
 		accessorKey: 'total_paid_amount',
-		header: 'Paid | Add Payment',
+		header: 'Add Payment | Paid',
 		enableColumnFilter: false,
 		cell: (info) => {
 			return (
 				<div className='flex gap-2'>
-					{info?.getValue() as string | number}
 					<Add onClick={() => handlePaid?.(info.row)} />
+					{info?.getValue() as string | number}
 				</div>
 			);
 		},

@@ -1,7 +1,10 @@
+import { stat } from 'fs';
 import { lazy, useMemo, useState } from 'react';
 import { PageProvider, TableProvider } from '@/context';
 import { Row } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
+
+import ReactSelect from '@/components/ui/react-select';
 
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
@@ -15,7 +18,16 @@ const DeleteModal = lazy(() => import('@core/modal/delete'));
 
 const Loan = () => {
 	const navigate = useNavigate();
-	const { data, isLoading, url, deleteData, postData, updateData, refetch } = useLibLoans<ILoanTableData[]>();
+	const [status, setStatus] = useState('all');
+	const options = [
+		{ value: 'all', label: 'All' },
+		{ value: 'completed', label: 'Completed' },
+		{ value: 'pending', label: 'Pending' },
+	];
+
+	const { data, isLoading, url, deleteData, postData, updateData, refetch } = useLibLoans<ILoanTableData[]>(
+		`is_completed=${status}`
+	);
 
 	const pageInfo = useMemo(() => new PageInfo('Library/Loan', url, 'lib__loan'), [url]);
 
@@ -64,6 +76,21 @@ const Loan = () => {
 				handleUpdate={handleUpdate}
 				handleDelete={handleDelete}
 				handleRefetch={refetch}
+				otherToolBarComponents={
+					<ReactSelect
+						placeholder='Select status'
+						options={options}
+						value={options?.find((option) => option.value === status)}
+						menuPortalTarget={document.body}
+						styles={{
+							menuPortal: (base) => ({ ...base, zIndex: 999 }),
+							control: (base) => ({ ...base, minWidth: 120 }),
+						}}
+						onChange={(e: any) => {
+							setStatus(e?.value);
+						}}
+					/>
+				}
 			>
 				{renderSuspenseModals([
 					<AddOrUpdate

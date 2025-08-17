@@ -8,6 +8,7 @@ export const LOAN_SCHEMA = z.object({
 	type: z.enum(['friend', 'business', 'family']),
 	amount: NUMBER_DOUBLE_REQUIRED.gt(0),
 	taken_at: STRING_REQUIRED,
+	is_completed: z.boolean().default(false),
 	remarks: STRING_NULLABLE,
 });
 
@@ -16,6 +17,7 @@ export const LOAN_NULL: Partial<ILoan> = {
 	type: 'business',
 	amount: 0,
 	taken_at: '',
+	is_completed: false,
 	remarks: null,
 };
 
