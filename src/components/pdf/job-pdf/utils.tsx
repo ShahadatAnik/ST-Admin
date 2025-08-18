@@ -27,7 +27,7 @@ export const getPageFooter = ({
 			body: [
 				[
 					{
-						text: 'Authorizes By',
+						text: 'Authorized By',
 						alignment: 'center',
 						border: [false, true, false, false],
 					},
@@ -36,7 +36,7 @@ export const getPageFooter = ({
 						border: [false, false, false, false],
 					},
 					{
-						text: 'Customer',
+						text: 'Customer Signature ',
 						alignment: 'center',
 						border: [false, true, false, false],
 					},
