@@ -1,10 +1,12 @@
 import { ColumnDef, Row } from '@tanstack/react-table';
+import { Download } from 'lucide-react';
 
 import StatusButton from '@/components/buttons/status';
 import Transfer from '@/components/buttons/transfer';
 import DateTime from '@/components/ui/date-time';
 
 import {
+	IJobDetailsTableData,
 	IJobDetailsTableJobEntry,
 	IJobDetailsTablePayment,
 	IJobDetailsTableProductSerial,
@@ -12,9 +14,7 @@ import {
 } from './columns.type';
 
 // Department Columns
-export const jobColumns = (
-	handlePayment?: (row: Row<IJobTableData>) => void // Adjust type as needed
-): ColumnDef<IJobTableData>[] => [
+export const jobColumns = (handlePayment?: (row: Row<IJobTableData>) => void): ColumnDef<IJobTableData>[] => [
 	{
 		accessorKey: 'job_id',
 		header: 'Job No.',

@@ -12,7 +12,7 @@ import { getDateTime } from '@/utils';
 import pdfMake from '..';
 import { getPageFooter, transformProductDataArray } from './utils';
 
-export default function Index(data: IJobDetailsTableData, title: string) {
+export default function Index(data: IJobDetailsTableData) {
 	const headerHeight = 20;
 	const footerHeight = 50;
 
@@ -21,31 +21,25 @@ export default function Index(data: IJobDetailsTableData, title: string) {
 	const node = [
 		getTable('index', 'No', 'center'),
 		getTable('description', 'Description'),
-		getTable('warranty', 'Warranty'),
 		getTable('quantity', 'Quantity', 'right'),
-		getTable('unit_price', 'Unit Price', 'right'),
-		getTable('total_price', 'Price', 'right'),
-		getTable('total_price_with_5_percent', 'Price (with\n 5% TAX)', 'right'),
 	];
 
 	// Compute totals
 	let total = 0;
-	let totalWithout5Percent = 0;
 	products.forEach((product) => {
-		total += Number(product.total_price_with_5_percent) || 0;
-		totalWithout5Percent += Number(product.total_price) || 0;
+		total += Number(product.quantity) || 0;
 	});
 
 	// Build dynamic total row based on node length
 	const totalRow = (() => {
 		const cells: any[] = [];
-		const leftCols = node.length - 2; // all except the two price columns
+		const leftCols = node.length - 1;
+		console.log(leftCols);
 		cells.push({ text: 'Total', colSpan: leftCols, alignment: 'right' });
 		for (let i = 0; i < leftCols - 1; i++) {
 			cells.push({});
 		}
-		cells.push({ text: totalWithout5Percent.toFixed(2), alignment: 'right' });
-		cells.push({ text: total.toFixed(2), alignment: 'right' });
+		cells.push({ text: total, alignment: 'right' });
 		return cells;
 	})();
 
@@ -105,7 +99,7 @@ export default function Index(data: IJobDetailsTableData, title: string) {
 			},
 			{ text: '\n' },
 			{
-				text: `${title}`,
+				text: 'Challan',
 				bold: true,
 				fontSize: DEFAULT_FONT_SIZE + 2,
 				alignment: 'center',
@@ -131,35 +125,13 @@ export default function Index(data: IJobDetailsTableData, title: string) {
 					widths: [
 						15, // No
 						'*', // Description
-						45, // Warranty
 						35, // Quantity
-						50, // Unit Price
-						45, // Price
-						45, // Price(with 5% TAX)
 					],
 					body: tableBody,
 				},
 				// layout: 'noBorders',
 			},
 			{ text: '\n' },
-			{ text: `In Words: ${TakaToWord(totalWithout5Percent)}`, bold: true },
-			{ text: '\n' },
-			{ text: 'Terms & Conditions:', bold: true },
-			{
-				ul: [
-					'VAT & TAX: Excluding vat & tax',
-					'Delivery time: Within Two days after receiving work order.',
-					'Payment term: Cash Payment/Bank Transfer/ Products will be delivered after cheque passed.',
-				],
-			},
-			{ text: '\n' },
-			{ text: 'Best Regards,' },
-			{ text: '\n\n' },
-			{ text: 'Shahir Ahmed,' },
-			{ text: 'Senior Executive, Business Development' },
-			{ text: 'Synap Tech' },
-			{ text: 'Email: shahir@synaptech.cloud' },
-			{ text: 'Phone: 01614328626' },
 		],
 	});
 

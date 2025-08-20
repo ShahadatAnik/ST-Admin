@@ -1,5 +1,6 @@
 import { format } from 'path';
 import React from 'react';
+import { Download } from 'lucide-react';
 
 import StatusButton from '@/components/buttons/status';
 import SectionContainer from '@/components/others/section-container';
@@ -9,8 +10,10 @@ import DateTime from '@/components/ui/date-time';
 import { formatDateTable } from '@/utils/formatDate';
 
 import { IJobDetailsTableData } from '../_config/columns/columns.type';
+import { default as ChallanPdf } from '../../../../components/pdf/challan-pdf';
+import { default as JobPdf } from '../../../../components/pdf/job-pdf';
 
-const Information: React.FC<{ data: IJobDetailsTableData }> = ({ data }) => {
+const Information: React.FC<{ data: IJobDetailsTableData; jobPdf?: any; challanPdf?: any }> = ({ data }) => {
 	const renderHeaderItems = (): ITableListItems => {
 		return [
 			{
@@ -55,11 +58,42 @@ const Information: React.FC<{ data: IJobDetailsTableData }> = ({ data }) => {
 			},
 		];
 	};
+	const renderHeaderItem2 = (): ITableListItems => {
+		return [
+			{
+				label: 'Quotation',
+				value: (
+					<button className='btn btn-primary' onClick={() => JobPdf(data, 'Quotation').download()}>
+						<Download />
+					</button>
+				),
+			},
+			{
+				label: 'Challan',
+				value: (
+					<button className='btn btn-primary' onClick={() => ChallanPdf(data).download()}>
+						<Download />
+					</button>
+				),
+			},
+			{
+				label: 'Bill',
+				value: (
+					<button className='btn btn-primary' onClick={() => JobPdf(data, 'Bill').download()}>
+						<Download />
+					</button>
+				),
+			},
+		];
+	};
 
 	return (
 		<>
 			<SectionContainer title={'General Information'} className='h-1/3'>
-				<TableList title='Job Details' items={renderHeaderItems()} />
+				<div className='grid w-full grid-cols-2 gap-2'>
+					<TableList title='Job Details' items={renderHeaderItems()} />
+					<TableList title='PDF' items={renderHeaderItem2()} />
+				</div>
 			</SectionContainer>
 		</>
 	);
