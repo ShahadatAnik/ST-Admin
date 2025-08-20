@@ -88,6 +88,9 @@ export default function Index(data: IJobDetailsTableData) {
 			margin: [xMargin, 2],
 			fontSize: DEFAULT_FONT_SIZE,
 		}),
+		info: {
+			title: `Challan - ${data?.job_id || ''}`,
+		},
 
 		// Main content
 		content: [

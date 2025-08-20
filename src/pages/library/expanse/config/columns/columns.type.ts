@@ -10,4 +10,5 @@ export type IExpanseTableData = {
 	created_at: string;
 	updated_at: string;
 	remarks: string;
+	job_id: string;
 };

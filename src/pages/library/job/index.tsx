@@ -3,6 +3,7 @@ import { PageProvider, TableProvider } from '@/context';
 import { Row } from '@tanstack/react-table';
 import { se } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
+import { string } from 'zod';
 
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
@@ -12,6 +13,8 @@ import { default as JobPdf } from '../../../components/pdf/job-pdf';
 import { jobColumns } from './_config/columns';
 import { IJobDetailsTableData, IJobTableData } from './_config/columns/columns.type';
 import { useJob, useJobByUUID } from './_config/query';
+
+const Payment = lazy(() => import('./payment/entry'));
 
 const DeleteModal = lazy(() => import('@core/modal/delete'));
 
@@ -23,6 +26,7 @@ const DetailsPage = () => {
 	const handleCreate = () => {
 		navigate('/lib/job/create');
 	};
+	const [isOpenAddModal, setIsOpenAddModal] = useState(false);
 
 	const handleUpdate = (row: Row<IJobTableData>) => {
 		navigate(`/lib/job/${row.original.uuid}/update`);
@@ -34,6 +38,8 @@ const DetailsPage = () => {
 		name: string;
 	} | null>(null);
 
+	const [updatedData, setUpdatedData] = useState<IJobTableData | null>(null);
+
 	const handleDelete = (row: Row<IJobTableData>) => {
 		setDeleteItem({
 			id: row?.original?.uuid,
@@ -42,7 +48,8 @@ const DetailsPage = () => {
 	};
 
 	const handlePayment = (row: Row<IJobTableData>) => {
-		navigate(`/lib/job/${row.original.uuid}/payment`);
+		setUpdatedData(row.original);
+		setIsOpenAddModal(true);
 	};
 
 	// Table Columns
@@ -66,6 +73,15 @@ const DetailsPage = () => {
 				handleRefetch={refetch}
 			>
 				{renderSuspenseModals([
+					<Payment
+						{...{
+							url,
+							open: isOpenAddModal,
+							setOpen: setIsOpenAddModal,
+							updatedData,
+							setUpdatedData,
+						}}
+					/>,
 					<DeleteModal
 						{...{
 							deleteItem,
