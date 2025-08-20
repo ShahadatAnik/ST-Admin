@@ -79,6 +79,16 @@ export const jobColumns = (handlePayment?: (row: Row<IJobTableData>) => void): C
 		cell: (info) => info.getValue(),
 	},
 	{
+		accessorKey: 'total_expense',
+		header: () => (
+			<>
+				Operational <br /> Expense
+			</>
+		),
+		enableColumnFilter: false,
+		cell: (info) => info.getValue(),
+	},
+	{
 		accessorKey: 'total_selling_price',
 		header: () => (
 			<>
@@ -104,23 +114,12 @@ export const jobColumns = (handlePayment?: (row: Row<IJobTableData>) => void): C
 		enableColumnFilter: false,
 		cell: (info) => info.getValue(),
 	},
-	// {
-	// 	accessorKey: 'payment_methods',
-	// 	header: () => (
-	// 		<>
-	// 			Payment <br /> Methods
-	// 		</>
-	// 	),
-	// 	enableColumnFilter: false,
-	// 	cell: (info) => info.getValue(),
-	// },
 	{
 		id: 'payment',
 		header: 'Payment',
 		cell: (info) => <Transfer onClick={() => handlePayment?.(info.row)} />,
 		size: 40,
 		meta: {
-			// hidden: !actionTrxAccess,
 			disableFullFilter: true,
 		},
 	},

@@ -94,6 +94,9 @@ export default function Index(data: IJobDetailsTableData, title: string) {
 			margin: [xMargin, 2],
 			fontSize: DEFAULT_FONT_SIZE,
 		}),
+		info: {
+			title: `${title}  - ${data?.job_id || ''}`,
+		},
 
 		// Main content
 		content: [

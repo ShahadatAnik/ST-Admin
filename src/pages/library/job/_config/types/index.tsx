@@ -1,6 +1,6 @@
 import { IDefaultAddOrUpdateProps, IDefaultSerialAddOrUpdateProps } from '@/types';
 
-import { IJobEntryTableData, IJobTableData } from '../columns/columns.type';
+import { IJobEntryTableData } from '../columns/columns.type';
 import { IJob } from '../schema';
 
 export interface IClientAddOrUpdateProps extends IDefaultAddOrUpdateProps {
@@ -10,6 +10,7 @@ export interface IClientAddOrUpdateProps extends IDefaultAddOrUpdateProps {
 export interface ISerialAddOrUpdateProps extends IDefaultSerialAddOrUpdateProps {
 	updatedData: IJob['job_entry'][number] | null;
 }
+
 export interface InputItem {
 	product: string;
 	vendor: string;
@@ -36,4 +37,13 @@ export interface OutputItem {
 	purchased_at: string | null;
 	is_serial_needed: boolean;
 	product_serial: ProductSerial[];
+}
+
+export interface IJobTableData {
+	uuid: string;
+	job_uuid: string;
+	index: number;
+	paid_at: string;
+	method: string;
+	amount: number;
 }

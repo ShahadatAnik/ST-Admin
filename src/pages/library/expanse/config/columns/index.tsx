@@ -8,9 +8,16 @@ import { IExpanseTableData } from './columns.type';
 export const expanseColumns = (): ColumnDef<IExpanseTableData>[] => [
 	{
 		accessorKey: 'job_id',
-		header: 'Job ID',
+		header: 'Job No.',
 		enableColumnFilter: false,
-		cell: (info) => info.getValue(),
+		cell: (info) => {
+			const { job_uuid, job_id } = info.row.original;
+			return (
+				<a href={`/lib/job/${job_uuid}/details`} className='underline' target='_blank'>
+					{job_id}
+				</a>
+			);
+		},
 	},
 	{
 		accessorKey: 'expense_at',

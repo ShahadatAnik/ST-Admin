@@ -6,7 +6,7 @@ import useAuth from '@/hooks/useAuth';
 import useRHF from '@/hooks/useRHF';
 
 import CoreForm from '@core/form';
-import { DeleteModal } from '@core/modal';
+import { AddModal, DeleteModal, DetailsModal } from '@core/modal';
 
 import nanoid from '@/lib/nanoid';
 import { getDateTime } from '@/utils';
@@ -16,9 +16,16 @@ import { useJob, useJobPayment } from '../_config/query';
 import { IJobPayment, JOB_PAYMENT_NULL, JOB_PAYMENT_SCHEMA } from '../_config/schema';
 import useGenerateFieldDefs from './useGenerateFieldDefs';
 
-const Entry = () => {
-	const { uuid } = useParams();
-	const isUpdate = !!uuid;
+type EntryProps = {
+	url: string;
+	open: boolean;
+	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	updatedData?: IJobTableData | null;
+	setUpdatedData?: React.Dispatch<React.SetStateAction<IJobTableData | null>>;
+};
+
+const Entry: React.FC<EntryProps> = ({ url, open, setOpen, updatedData, setUpdatedData }) => {
+	const isUpdate = !!updatedData?.uuid;
 	const navigate = useNavigate();
 
 	const { user } = useAuth();
@@ -28,9 +35,15 @@ const Entry = () => {
 		postData,
 		deleteData,
 		invalidateQuery: invalidateQueryItem,
-	} = useJobPayment(uuid as string);
+	} = useJobPayment(updatedData?.uuid as string);
 	const { invalidateQuery } = useJob<IJobTableData[]>();
 	const { invalidateQuery: invalidateExpense } = useLibReportProfitSummary();
+
+	const onClose = () => {
+		setUpdatedData?.(null);
+		setOpen(false);
+		form.reset(JOB_PAYMENT_NULL); // Reset form when closing
+	};
 
 	const form = useRHF(JOB_PAYMENT_SCHEMA, JOB_PAYMENT_NULL);
 
@@ -66,7 +79,7 @@ const Entry = () => {
 					created_at: getDateTime(),
 					created_by: user?.uuid,
 					uuid: nanoid(),
-					job_uuid: uuid,
+					job_uuid: updatedData?.uuid,
 				};
 
 				return postData.mutateAsync({
@@ -81,6 +94,7 @@ const Entry = () => {
 			invalidateQuery();
 			invalidateQueryItem();
 			invalidateExpense();
+			onClose(); // Close modal after successful submission
 			navigate('/lib/job');
 		} catch (error) {
 			console.error('Error updating payments:', error);
@@ -133,30 +147,33 @@ const Entry = () => {
 	}, 0);
 
 	return (
-		<CoreForm.AddEditWrapper title={isUpdate ? 'Edit Payment' : 'Add Payment'} form={form} onSubmit={onSubmit}>
-			<CoreForm.DynamicFields
-				title='Payment Entries'
-				form={form}
-				fieldName='payment'
-				fieldDefs={useGenerateFieldDefs({
-					data: form.getValues(),
-					copy: handleCopy,
-					remove: handleRemove,
-					form: form,
-					isUpdate,
-				})}
-				handleAdd={handleAdd}
-				fields={fields}
-			>
-				<tr>
-					<td colSpan={3} className='border-t px-5 text-right font-semibold'>
-						Total:
-					</td>
-					<td colSpan={2} className='border-t px-3 py-2'>
-						{Total}
-					</td>
-				</tr>
-			</CoreForm.DynamicFields>
+		<div>
+			<AddModal open={open} setOpen={onClose} form={form} isSmall={true} onSubmit={onSubmit}>
+				<CoreForm.DynamicFields
+					title={isUpdate ? 'Update Payment' : 'Add Payment'}
+					form={form}
+					fieldName='payment'
+					fieldDefs={useGenerateFieldDefs({
+						data: form.getValues(),
+						copy: handleCopy,
+						remove: handleRemove,
+						form: form,
+						isUpdate,
+					})}
+					handleAdd={handleAdd}
+					fields={fields}
+				>
+					<tr>
+						<td colSpan={3} className='border-t px-5 text-right font-semibold'>
+							Total:
+						</td>
+						<td colSpan={2} className='border-t px-3 py-2'>
+							{Total}
+						</td>
+					</tr>
+				</CoreForm.DynamicFields>
+			</AddModal>
+
 			<Suspense fallback={null}>
 				<DeleteModal
 					{...{
@@ -173,7 +190,7 @@ const Entry = () => {
 					}}
 				/>
 			</Suspense>
-		</CoreForm.AddEditWrapper>
+		</div>
 	);
 };
 

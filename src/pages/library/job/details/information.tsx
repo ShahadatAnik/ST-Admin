@@ -1,5 +1,5 @@
 import { format } from 'path';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Download } from 'lucide-react';
 
 import StatusButton from '@/components/buttons/status';
@@ -58,30 +58,59 @@ const Information: React.FC<{ data: IJobDetailsTableData; jobPdf?: any; challanP
 			},
 		];
 	};
+	const [challanUrl, setChallanUrl] = useState('');
+	const [quotationUrl, setQuotationUrl] = useState('');
+	const [billUrl, setBillUrl] = useState('');
+
+	useEffect(() => {
+		if (data) {
+			ChallanPdf(data)?.getDataUrl((dataUrl) => {
+				setChallanUrl(dataUrl);
+			});
+			JobPdf(data, 'Quotation').getDataUrl((dataUrl) => {
+				setQuotationUrl(dataUrl);
+			});
+			JobPdf(data, 'Bill').getDataUrl((dataUrl) => {
+				setBillUrl(dataUrl);
+			});
+		}
+	}, [data]);
 	const renderHeaderItem2 = (): ITableListItems => {
 		return [
 			{
 				label: 'Quotation',
 				value: (
-					<button className='btn btn-primary' onClick={() => JobPdf(data, 'Quotation').download()}>
+					<a
+						href={quotationUrl}
+						download={`${data.job_id}-Quotation.pdf`}
+						className='btn btn-success flex items-center gap-2'
+					>
 						<Download />
-					</button>
+					</a>
 				),
 			},
 			{
 				label: 'Challan',
 				value: (
-					<button className='btn btn-primary' onClick={() => ChallanPdf(data).download()}>
+					<a
+						href={challanUrl}
+						download={`${data.job_id}-Challan.pdf`}
+						className='btn btn-success flex items-center gap-2'
+					>
 						<Download />
-					</button>
+					</a>
 				),
 			},
 			{
 				label: 'Bill',
 				value: (
-					<button className='btn btn-primary' onClick={() => JobPdf(data, 'Bill').download()}>
+					<a
+						href={billUrl}
+						download={`${data.job_id}-Bill.pdf`}
+						className='btn btn-success flex items-center gap-2'
+					>
 						<Download />
-					</button>
+					</a>
 				),
 			},
 		];
