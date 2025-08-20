@@ -1,4 +1,4 @@
-export const DEFAULT_FONT_SIZE = 10;
+export const DEFAULT_FONT_SIZE = 9;
 export const xMargin = 30;
 export const yMargin = 40;
 export const A4_PAGE_WIDTH = 565;

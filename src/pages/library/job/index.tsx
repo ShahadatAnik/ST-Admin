@@ -1,21 +1,23 @@
-import { lazy, useMemo, useState } from 'react';
+import { lazy, useEffect, useMemo, useState } from 'react';
 import { PageProvider, TableProvider } from '@/context';
 import { Row } from '@tanstack/react-table';
+import { se } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 
 import { PageInfo } from '@/utils';
 import renderSuspenseModals from '@/utils/renderSuspenseModals';
 
+import OrderSheetPdf, { default as ChallanPdf } from '../../../components/pdf/challan-pdf';
+import { default as JobPdf } from '../../../components/pdf/job-pdf';
 import { jobColumns } from './_config/columns';
-import { IJobTableData } from './_config/columns/columns.type';
-import { useJob } from './_config/query';
+import { IJobDetailsTableData, IJobTableData } from './_config/columns/columns.type';
+import { useJob, useJobByUUID } from './_config/query';
 
 const DeleteModal = lazy(() => import('@core/modal/delete'));
 
 const DetailsPage = () => {
 	const navigate = useNavigate();
 	const { data, isLoading, url, deleteData, refetch } = useJob<IJobTableData[]>();
-
 	const pageInfo = useMemo(() => new PageInfo('Library/Job', url, 'lib__job'), [url]);
 
 	const handleCreate = () => {
